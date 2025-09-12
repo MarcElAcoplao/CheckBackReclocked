@@ -1,0 +1,30 @@
+body {
+  background-color: rgb(43, 1, 1);
+}
+
+.button {
+  background-color: rgb(182, 101, 74);
+  border: 0.3vh solid #d22;
+  color: #fff;
+}
+
+@keyframes flickering {
+  from {border-color: #d22;}
+  to {border-color: #dcb2b2;}
+}
+
+.button:disabled {
+  background-color: #777;
+  border: 0.3vh solid #444;
+  color: #ddd;
+}
+
+#nextUnlockLevel, #selectedPetText, #themeText, #versionText, #XPBoostDisplay, #ItemBoostDisplay {
+  color: #d99;
+}
+
+.tabButton {
+  background-color: rgb(182, 101, 74);
+  border: 0.3vh solid #d22;
+  color: #fff;
+}

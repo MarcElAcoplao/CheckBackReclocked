@@ -1,0 +1,30 @@
+Unlocks:
+Level 1 (Start): XP Button 1
+Level 2 (1): XP Button 2
+Level 3: XP Button 3
+Level 4: XP Button 4
+Level 6: XP Button 5
+Level 8 (5): Pet crate 1 + Tabs
+Level 12: Pet crate 2
+Level 18: XP Button 6
+Level 25: XP Button 7
+Level 35: Pet crate 3
+--------------------------- Daily rewards are a focus for later
+Level 50 (10): Daily rewards
+Level 65: XP Button 8
+Level 80: XP Button 9
+--------------------------- XPBoost is a focus for even later on
+Level 100: XPBoost
+
+
+Tycoon simulator inspiration ideas:
+-A generator that gives 1 money/second by base
+-Tier up that requires an exponential amount of money and unlocks something new
+-Tier 1: Upgrade that increases base money gain
+-Tier 2: Chance to gain more money, upgrades to increase the multi and trigger Chance
+-Tier 3: Rebirth that resets money and previous upgrades to give a money boost
+-Tier 4: Speed boost, triggers generation more times a second
+-Tier 5: Another chance to gain even more money, upgrades that can increase the multi and trigger chance
+-Tier 6: Ultra rebirth that resets previous upgrades and rebirth to give a money/rebirth boost
+-Tier 7: Spend ultra rebirth to increase the chance of getting a permanent money boost when generating money
+How will this be related to the other sections of check back? [And how will check back relate to this section?] I don't know yet

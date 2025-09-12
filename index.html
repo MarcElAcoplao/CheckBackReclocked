@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <meta content="Check Back Reclocked" property="og:title" />
+  <meta content="Prepare your clock to check back later." property="og:description" />
+  <meta content="img/icon.png" property="og:image" />
+  <meta content="#008888" data-react-helmet="true" name="theme-color" />
+  <meta name="color-scheme" content="light only">
+  <title>2 - Check Back Reclocked</title>
+  <link href="style.css" rel="stylesheet" type="text/css" />
+  <link id="themeLink" href="themes/themeNeon.css" rel="stylesheet" type="text/css" />
+  <link rel="icon" type="image/x-icon" href="img/icon.png">
+</head>
+
+<body>
+  <div id="topBar">
+    <div id="levelBar">
+      <p id="levelBarText"> <span id="level">Level 1</span></p>
+      <p id="levelBarRankText">(<span id="rank">beginner clicker</span>)</p>
+    </div>
+    <div id="XPBar">
+      <div id="XPBarBack"></div>
+      <p id="XPBarText">XP to next level: <span id="XPToNextlevel">0/20</span></p>
+    </div>
+  </div>
+
+  <div id="mainContainer">
+    <div id="tabsContainer">
+      <p id="nextUnlockLevel">You will unlock something new at level 2</p>
+      <button class="button" id="InventoryTab" style="display: none" onclick="tab(1)">Collections</button>
+      <button class="button" id="MainTab" style="display: none" onclick="tab(2)">Main Buttons</button>
+    </div>
+
+    <div id="buttonsContainer">
+      
+      <button class="button" id="petsInventory" style="display: none" onclick="openClosePetsTab()">Pets</button>
+
+      <button class="button" id="XPTab" style="display: none" onclick="subtab(1)">XP Buttons</button>
+      <button class="button" id="CratesTab" style="display: none" onclick="subtab(2)">Pet Crates</button>
+
+
+      <button class="button" id="XPbutton0" style="display: none" onclick="xpButton(0)">Gain 10 XP</button>
+      <button class="button" id="XPbutton1" style="display: none" onclick="xpButton(1)">Gain 20 XP</button>
+      <button class="button" id="XPbutton2" style="display: none" onclick="xpButton(2)">Gain 30 XP</button>
+      <button class="button" id="XPbutton3" style="display: none" onclick="xpButton(3)">Gain 50 XP</button>
+      <button class="button" id="XPbutton4" style="display: none" onclick="xpButton(4)">Gain 100 XP</button>
+      <button class="button" id="XPbutton5" style="display: none" onclick="xpButton(5)">Gain 200 XP</button>
+      <button class="button" id="XPbutton6" style="display: none" onclick="xpButton(6)">Gain 500 XP</button>
+      <button class="button" id="XPbutton7" style="display: none" onclick="xpButton(7)">Gain 1000 XP</button>
+      <button class="button" id="XPbutton8" style="display: none" onclick="xpButton(8)">Gain 1500 XP</button>
+      <button class="button" id="XPbutton9" style="display: none" onclick="xpButton(9)">Gain 2500 XP</button>
+      <button class="button" id="XPbutton10" style="display: none" onclick="xpButton(10)">Gain 5000 XP</button>
+      <button class="button" id="XPbutton11" style="display: none" onclick="xpButton(11)">Gain 10000 XP</button>
+
+      <button class="button" id="petButton0" style="display: none" onclick="unboxAmount(0, 1)" onmouseover="displayPetRarities(0)" onmouseout="displayPetRarities(-1)">Unbox a random basic pet</button>
+      <button class="button" id="petButton1" style="display: none" onclick="unboxAmount(1, 1)" onmouseover="displayPetRarities(1)" onmouseout="displayPetRarities(-1)">Unbox a random common pet</button>
+      <button class="button" id="petButton2" style="display: none" onclick="unboxAmount(2, 1)" onmouseover="displayPetRarities(2)" onmouseout="displayPetRarities(-1)">Unbox a random placeholder pet</button>
+
+    </div>
+
+    <div id="infosContainer">
+      <p id="selectedPetText"><span id="selectedPetUpperText">Current selected pet:<br><span id="selectedPet" style="font-weight: bold">None</span><br></span><img id="selectedPetImg" src="img/pets/0.png" style="width: 8vh; display: none"><br><br><span id="petRarities"></span></p>
+    </div>
+  </div>
+
+  <div id="footerContainer">
+    <div id="leftFooterColumn">
+      <div id="themeDiv">
+        <p id="themeText" style="font-size: 1.5vh; margin: 0.3vh">Theme:</p>
+        <button class="themeButton" style="background-color: #c8c0b8; border: 0.3vh solid #444; color: #444" onclick="changeTheme(1)">Light</button>
+        <button class="themeButton" style="background-color: #333; border: 0.3vh solid #bbb; color: #bbb" onclick="changeTheme(2)">Dark</button>
+        <button class="themeButton" style="background-color: black; border: 0.3vh solid #0ff; color: #0ff" onclick="changeTheme(3)">Neon</button>
+        <button class="themeButton" style="background-color: #496; border: 0.3vh solid #242; color: #242" onclick="changeTheme(4)">Green</button>
+        <button class="themeButton" style="background-color: #96a; border: 0.3vh solid #424; color: #424" onclick="changeTheme(5)">Purple</button>
+        <button class="themeButton" style="background-color: #d75; border: 0.3vh solid #422; color: #422" onclick="changeTheme(6)">Red</button>
+        <button class="themeButton" style="background-color: rgb(204, 0, 255); border: 0.3vh solid rgb(255, 196, 0); color: #422;" onclick="changeTheme(7)">Dimensional</button>
+      </div>
+
+      <button class="button" id="dailyButton" onclick="openCloseDailyTab()">Daily rewards</button>
+    </div>
+
+    <div id="rightFooterColumn">
+      <p id="versionText">Check Back Reclocked <a href="https://github.com/MarcElAcoplao/CheckBackMod/blob/main/changelog.txt" target="_blank">v1.0</a> (Creator: MarcElAcoplao, <a href="https://discord.gg/YaSk8e2wFt" target="_blank">Discord</a>)<br>
+        <a href="https://demonin.com/games/checkBack/" target="_blank">Classic game</a> by Demonin (<a href="https://discord.gg/3hwM7ScH6k" target="_blank">Discord</a>)</p>
+      <div id="settingsContainer">
+        <button class="settingsButton" id="setting6" onclick="help()">Help</button>
+        <button class="settingsButton" id="setting5" onclick="openCloseStatsTab()">Display stats</button>
+        <button class="settingsButton" id="setting4" onclick="exportGame()">Export</button>
+        <button class="settingsButton" id="setting3" onclick="importGame()">Import</button>
+        <button class="settingsButton" id="setting2" onclick="save()">Manual save</button>
+        <button class="settingsButton" id="setting1" style="background-color: #d99" onclick="hardReset()">Hard reset</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="dailyDiv">
+    <p style='font-size: 5vh; font-weight: bold; color: #ccc; margin: 0; margin-left: 6px'>Daily reward</p>
+    <p style='font-size: 1.6vh; color: #ccc; margin: 0; margin-bottom: 6px; margin-left: 6px'>Click on a reward to obtain it. Rewards refresh once all have been collected</p>
+    <button class="closeButton" onclick="openCloseDailyTab()">Close</button>
+    <div id="dailyList">
+      <div id="dailyListInner"></div>
+    </div>
+    <div id="dailyInfo"></div>
+  </div>
+  
+  <div id="petsDiv">
+    <p style='font-size: 5vh; font-weight: bold; color: #ccc; margin: 0; margin-left: 6px'>Pets</p>
+    <p style='font-size: 1.6vh; color: #ccc; margin: 0; margin-bottom: 6px; margin-left: 6px'>Click on a pet you've unlocked to select it. Each discovered pet gives +1% XP gains (Most of the textures are taken from "Open game art" from a project called Dungeon Crawl. Make sure to check these out)</p>
+    <button class="closeButton" onclick="openClosePetsTab()">Close</button>
+    <div id="petsList">
+      <div id="petsListInner"></div>
+    </div>
+    <div id="petInfo"></div>
+  </div>
+
+  <div id="statsDiv">
+    <p style='font-size: 5vh; font-weight: bold; color: #ccc; margin: 0; margin-left: 6px'>Stats</p>
+    <p style='font-size: 1.6vh; color: #ccc; margin: 0; margin-bottom: 6px; margin-left: 6px'>Click on an icon to watch related statistics</p>
+    <button class="closeButton" onclick="openCloseStatsTab()">Close</button>
+    <div id="statsList">
+      <div id="statsListInner"></div>
+    </div>
+    <div id="statsInfo"></div>
+  </div>
+
+    <div id="unboxDiv">
+    <p style='font-size: 5vh; font-weight: bold; color: #ccc; margin: 0; margin-left: 6px'>Unboxed Pets</p>
+    <p style='font-size: 1.6vh; color: #ccc; margin: 0; margin-bottom: 6px; margin-left: 6px'>Click on any pet to equip it</p>
+    <button class="closeButton" onclick="openCloseUnboxTab()">Close</button>
+    <div id="unboxList">
+      <div id="unboxListInner"></div>
+    </div>
+    <div id="unboxInfo"></div>
+  </div>
+
+  <script src="constants.js"></script>
+  <script src="tabs.js"></script>
+  <script src="xp.js"></script>
+  <script src="pets.js"></script>
+  <script src="daily.js"></script>
+  <script src="script.js"></script>
+  <script src="stats.js"></script>
+  <script defer>setAutoSave()</script>
+</body>
+
+</html>
