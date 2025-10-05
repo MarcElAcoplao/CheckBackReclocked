@@ -66,6 +66,8 @@ function displayMainButtons() {
     if (game.player.unlocks >= mainSubTab[i].unlock && JSON.stringify(game.player.currentTab) == JSON.stringify([2, 0])) {document.getElementById(mainSubTab[i].name).style.display = "block"}
     else {document.getElementById(mainSubTab[i].name).style.display = "none"}
     }
+    if (game.player.permanentUnlocks >= 1) {document.getElementById("dailyButton").style.display = "block"}
+    else {document.getElementById("dailyButton").style.display = "none"}
 }
 setInterval(displayMainButtons, 50)
 

@@ -24,6 +24,7 @@ function reset() {
       highestLevel: 1,
       ranks: 0,
       unlocks: 0,
+      permanentUnlocks: 0,
       currentTheme: 2,
       timeOfLastUpdate: Date.now(),
       sessionStart: Date.now(),
@@ -275,6 +276,16 @@ function numberToTime(x) { //Converts a number from seconds (example: 346) into 
     for (let i=0;i<unlockLevels.length;i++) {
       if (game.xp.level >= unlockLevels[i] && game.player.unlocks < i+1) {
         game.player.unlocks = i+1
+      }
+    }
+    for (let i=0;i<permanentUnlockLevels.length;i++) {
+      if (game.xp.level >= permanentUnlockLevels[i] && game.player.permanentUnlocks < i+1) {
+        game.player.permanentUnlocks = i+1
+      }
+    }
+    for (let i=0;i<permanentUnlockLevels.length;i++) {
+      if ((game.player.unlocks == permanentUnlocks[i]-1) && (game.player.permanentUnlocks > i)) {
+        game.player.unlocks++
       }
     }
   }

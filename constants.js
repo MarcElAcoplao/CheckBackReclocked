@@ -1,4 +1,6 @@
 const unlockLevels = [2,3,4,6,8,12,18,25,35,50,65,80,100,100000000000]
+const permanentUnlockLevels = [50, 100000000]
+const permanentUnlocks = [10, 100000]
 const levelBarTextures = [50,55,60,65,70,80,90,100,200]
 
 const levelBarColours = [
