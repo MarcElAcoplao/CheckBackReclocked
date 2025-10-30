@@ -13,7 +13,7 @@ function addBig(a, b) { //a is an array [mantissa, exponent] and b is another ar
         else {
             finalMantissa = a[0] + b[0] / (10 ** expoDifference)
             finalExponent = a[1]
-            finalNumber = adjustMantissa(finalMantissa, finalExponent)
+            finalNumber = adjustMantissa([finalMantissa, finalExponent])
         }
         return finalNumber
     }
@@ -43,7 +43,7 @@ function substractBig(a, b) { //a is an array [mantissa, exponent] and b is anot
         else {
             finalMantissa = a[0] - b[0] / (10 ** expoDifference)
             finalExponent = a[1]
-            finalNumber = adjustMantissa(finalMantissa, finalExponent)
+            finalNumber = adjustMantissa([finalMantissa, finalExponent])
         }
         return finalNumber
     }
@@ -62,7 +62,7 @@ function multiplyBig(a, b) { //a is an array [mantissa, exponent] and b is anoth
     if (a.length == 2 && b.length == 2) {
         let finalMantissa = a[0] * b[0]
         let finalExponent = a[1] + b[1]
-        let finalNumber = adjustMantissa(finalMantissa, finalExponent)
+        let finalNumber = adjustMantissa([finalMantissa, finalExponent])
         return finalNumber
     }
     else {
@@ -80,7 +80,7 @@ function divideBig(a, b) { //a is an array [mantissa, exponent] and b is another
     if (a.length == 2 && b.length == 2) {
         let finalMantissa = a[0] / b[0]
         let finalExponent = a[1] - b[1]
-        let finalNumber = adjustMantissa(finalMantissa, finalExponent)
+        let finalNumber = adjustMantissa([finalMantissa, finalExponent])
         return finalNumber
     }
     else {
@@ -162,12 +162,12 @@ function compareBig(a, b) { //Checks if a number [a0, a1] is bigger than [b0, b1
     }
 }
 
-function adjustMantissa(a, b) { //Makes sure the mantissa is between 1 and 10, adjust the expo accordingly
-    if (a == 0) { return [0, 0] }
+function adjustMantissa(a) { //Makes sure the mantissa is between 1 and 10, adjust the expo accordingly
+    if (a[0] == 0) { return [0, 0] }
     else {
-        let mantissa = a
-        let absoluteMantissa = Math.abs(a)
-        let exponent = b
+        let mantissa = a[0]
+        let absoluteMantissa = Math.abs(a[0])
+        let exponent = a[1]
         if (absoluteMantissa >= 1 && absoluteMantissa < 10) { } //If the mantissa is between 1 and 10, no need to fix anything
         else {
             let offsetExponent = Math.floor(Math.log10(absoluteMantissa))
