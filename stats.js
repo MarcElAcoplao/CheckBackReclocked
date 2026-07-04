@@ -27,7 +27,7 @@ function displayStats() {
     for (let i = 1; i < stats.length; i++) {
         document.getElementById("statsListInner").appendChild(statsBox.cloneNode(true))
         statsBoxes[i - 1].setAttribute("id", i)
-        statsBoxes[i - 1].addEventListener('click', function () { if (stats[parseInt(this.id)].unlock <= game.player.unlocks) { showStatInfo(parseInt(this.id)) } })
+        statsBoxes[i - 1].addEventListener('click', function () { if (stats[parseInt(this.id)].unlock <= game.player.highestUnlocks) { showStatInfo(parseInt(this.id)) } })
         if (game.player.highestUnlocks >= stats[i].unlock) { //1st value is red, 2nd green and 3rd blue
             if (i == 4) { statsBoxes[i - 1].innerHTML = "<img src='img/pets/" + game.pets.equipped + ".png' style='width: 128px'>" }
             else if (i == 2) { statsBoxes[i - 1].innerHTML = "<img src='img/statImages/" + i + ".gif' style='width: 128px'>" }
