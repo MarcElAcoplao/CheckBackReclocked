@@ -56,10 +56,33 @@ img {
     z-index: 2;
 }
 
+#researchBar {
+    position: relative;
+    width: 80%;
+    left: 10%;
+    height: 10vh;
+    background-color: black;
+    z-index: 2;
+}
+
 #XPBarBack {
     position: absolute;
     top: 0;
     left: 0;
+    width: 0%;
+    height: 100%;
+    background-color: #0b0;
+    background: linear-gradient(90deg, rgba(0, 176, 0, 0) 49.7%, rgba(255, 255, 255, 0.5) 50%, rgb(0, 176, 0, 0) 50.3%);
+    transition: 500ms ease-out;
+    z-index: 2;
+    background-size: 200% 200%;
+    animation: gradientMove 120s ease infinite;
+}
+
+#researchBarBack {
+    position: absolute;
+    top: 0;
+    left: 0%;
     width: 0%;
     height: 100%;
     background-color: #0b0;
@@ -73,6 +96,17 @@ img {
     text-shadow: 0.3vh 0.3vh black;
     margin: 0;
     font-size: 3.5vh;
+    line-height: 5vh;
+    position: relative;
+    z-index: 2;
+}
+
+#researchBarText {
+    text-align: center;
+    color: white;
+    text-shadow: 0.3vh 0.3vh black;
+    margin: 0;
+    font-size: 2vh;
     line-height: 5vh;
     position: relative;
     z-index: 2;
@@ -234,10 +268,7 @@ img {
     font-size: 1.5vmin;
 }
 
-#petsDiv,
-#unboxDiv,
-#statsDiv,
-#dailyDiv {
+#petsDiv, #unboxDiv, #statsDiv, #dailyDiv, #researchDiv, #masteryDiv {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -264,17 +295,11 @@ img {
     z-index: 20;
 }
 
-#petsCloseButton:hover,
-#unboxCloseButton:hover,
-#statsCloseButton:hover,
-#dailyCloseButton:hover {
+#petsCloseButton:hover, #unboxCloseButton:hover, #statsCloseButton:hover, #dailyCloseButton:hover, #researchCloseButton:hover, #masteryCloseButton:hover {
     cursor: pointer;
 }
 
-#petsList,
-#unboxList,
-#statsList,
-#dailyList{
+#petsList, #unboxList, #statsList, #dailyList, #researchList, #masteryList {
     position: relative;
     margin: 0;
     width: 60%;
@@ -282,19 +307,13 @@ img {
     overflow-y: scroll;
 }
 
-#petsListInner,
-#unboxListInner,
-#statsListInner,
-#dailyListInner {
+#petsListInner, #unboxListInner, #statsListInner, #dailyListInner, #researchListInner, #masteryListInner {
     position: absolute;
     top: 0;
     left: 0;
 }
 
-#petInfo,
-#unboxInfo,
-#statsInfo,
-#dailyInfo {
+#petInfo, #unboxInfo, #statsInfo, #dailyInfo, #researchInfo, #masteryInfo{
     position: fixed;
     top: 0;
     right: 0;

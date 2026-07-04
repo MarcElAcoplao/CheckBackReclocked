@@ -21,34 +21,11 @@ body {
 
 .button:disabled {
   background-color: #444 !important;
+  background: #444 !important;
   border: 0.3vh solid #888 !important;
   color: #bbb !important;
 }
 
 #nextUnlockLevel, #selectedPetText, #themeText, #versionText, #XPBoostDisplay, #ItemBoostDisplay {
   color: #bbb;
-}
-
-#petButton1 {
-  background-color: rgb(31, 105, 61);
-  border: 0.3vh solid #2d2;
-  color: #1aff00;
-}
-
-#petButton2 {
-  background-color: rgb(119, 85, 0);
-  border: 0.3vh solid rgb(247, 185, 0);
-  color: #fcda00;
-}
-
-#petButton3 {
-  background-color: rgb(137, 23, 0);
-  border: 0.3vh solid rgb(255, 149, 1);
-  color: rgb(255, 166, 2);
-}
-
-#petButton4 {
-  background-color: rgb(83, 81, 80);
-  border: 0.3vh solid rgb(190, 184, 181);
-  color: rgb(211, 208, 196);
 }

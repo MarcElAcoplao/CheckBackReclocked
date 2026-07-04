@@ -11,19 +11,21 @@ const XPButtons = [ //The stats of every single xp button, also they are found o
     { name: "XPbutton9", xpGain: [2.5, 3], cooldown: 86400, unlock: 15 }, //2500-1d, level 250
     { name: "XPbutton10", xpGain: [5, 3], cooldown: 259200, unlock: 19 }, //5000-3d, level 1000
     { name: "XPbutton11", xpGain: [1, 4], cooldown: 604800, unlock: 23 }, //10000-7d, level 30k
+    { name: "XPbutton12", xpGain: [2, 4], cooldown: 1200000, unlock: 28 }, //10000-13.88d, level 30k
 ]
 
 function xpButton(x) {
-    if (game.xp.buttonCooldowns[x] == 0) {
-        game.xp.buttonCooldowns[x] = Math.max(XPButtons[x].cooldown / game.xp.cooldown, 1) //Sets the xp button cooldown to the required time
-        game.xp.amount = addBig(game.xp.amount, calculateXPGain(x)) //Adds your xp
-        game.player.buttonClicks += 1
+    if (game.xp.buttonCooldowns[x] >= XPButtons[x].cooldown / game.xp.cooldown) {
+        let times = roundRNG(game.xp.buttonCooldowns[x] / (XPButtons[x].cooldown / game.xp.cooldown))
+        game.xp.buttonCooldowns[x] = 0 //Sets the xp button cooldown to the default state
+        game.xp.amount = addBig(game.xp.amount, multiplyBig(calculateXPGain(x), times)) //Adds your xp
+        game.player.buttonClicks += times
     }
 }
 
 function calculateXPGain(x) { //You insert this command with the desired xp amount and it returns the gain after multipliers
     let result = multiplyBig(XPButtons[x].xpGain, game.xp.multiplier)
-    //result = exponentBig(result, game.xp.expo)
+    result = exponentBig(result, game.xp.expo)
     return result
 }
 
@@ -33,13 +35,16 @@ function calculateXPStats() {
     baseMulti = multiplyBig(baseMulti, game.xpBoost.effectiveBoost) //xpboost effect
     baseMulti = multiplyBig(baseMulti, game.tokenBonuses.xp) //Token upgrade 1, yea this is shitty will do it better later
     baseMulti = multiplyBig(baseMulti, game.dailyBonuses.xp)
+    baseMulti = multiplyBig(baseMulti, game.researchBonuses.xpMulti)
     game.xp.multiplier = baseMulti
     let baseCooldown = 1 //xp cooldown divider
-    if (!!pets[game.pets.equipped].xpCooldown) { baseCooldown = baseCooldown * pets[game.pets.equipped].xpCooldown }
-    baseCooldown = baseCooldown * (game.tokenBonuses.xpCooldown) //No need to do them 1 by 1 but I prefer doing it like this
+    if (!!pets[game.pets.equipped].xpCooldown) { baseCooldown *= pets[game.pets.equipped].xpCooldown }
+    baseCooldown *= game.tokenBonuses.xpCooldown //No need to do them 1 by 1 but I prefer doing it like this
+    baseCooldown *= game.researchBonuses.xpCooldown
     game.xp.cooldown = baseCooldown //Calculates your xp cooldown divider
     let baseExpo = [1, 0]
     if (game.prestige.reset == true) { baseExpo = multiplyBig(baseExpo, game.prestige.xpNerf) }
+    baseExpo = multiplyBig(baseExpo, game.researchBonuses.xpExpo)
     game.xp.expo = baseExpo
 }
 setInterval(calculateXPStats, 50)
@@ -91,4 +96,18 @@ function levelToXP(x) {
     }
     else if (typeof x === 'number' && !isNaN(x)) { return levelToXP(convertToBig(x)) }
     else return "Error in levelToXP, wrong imput"
+}
+
+function resetXPCooldowns() {
+    for (let i = 0; i < XPButtons.length; i++) {
+        game.xp.buttonCooldowns[i] = XPButtons[i].cooldown
+    }
+}
+
+function collectAllXP() {
+    for (let i = 0; i < XPButtons.length; i++) {
+        if ((game.xp.buttonCooldowns[i] >= XPButtons[i].cooldown / game.xp.cooldown) && game.player.unlocks >= XPButtons[i].unlock) {
+            xpButton(i)
+        }
+    }
 }

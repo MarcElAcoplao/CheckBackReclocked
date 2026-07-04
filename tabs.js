@@ -1,12 +1,4 @@
-/*TAB MAP: game.player.currentTab[main, sub] (Formatted at main.sub, for example 2.1 is [2, 1])
-1.0: Collections (Each button opens a popup-menu)
-    Pet inventory button
-2.0: Main buttons (Each button opens a sub-group)
-    2.1: XP Buttons
-    2.2: Pet Crates
-*/
-
-//This will mostly be removed soon and turned into some sort of "Dodecadragons" map-like grid
+//This might be removed and turned into some sort of "Dodecadragons" map-like grid
 const mainTabs = [ //Represents the names and unlocks for each main tab
     { name: "dailyButton", unlock: 3 },
     { name: "InventoryTab", unlock: 5 },
@@ -27,6 +19,7 @@ const mainSubTab = [ //Represents the names and unlocks for each subtab inside t
 
 const prestigeSubTab = [
     { name: "ResearchTab", unlock: 0 },
+    { name: "MasteryTab", unlock: 26 },
 ]
 
 const otherFunniesDisplay = [
@@ -48,38 +41,58 @@ function subtab(x) {
 function displayTabContent() {
     let i = 0
     let size = 0
+    let currentTab = JSON.stringify(game.player.currentTab)
     size = XPButtons.length
     for (i = 0; i < size; i++) { //If the player has the unlock requirement for an xp button AND is inside the specific tab, the button will show, either it will hide
-        if (game.player.unlocks >= XPButtons[i].unlock && JSON.stringify(game.player.currentTab) == JSON.stringify([2, 1])) { document.getElementById(XPButtons[i].name).style.display = "block" }
+        if (game.player.unlocks >= XPButtons[i].unlock && currentTab == "[2,1]") { document.getElementById(XPButtons[i].name).style.display = "block" }
         else { document.getElementById(XPButtons[i].name).style.display = "none" }
     }
-    if (JSON.stringify(game.player.currentTab) == JSON.stringify([2, 1])) {
+    if (currentTab == "[2,1]") {
         document.getElementById("petRarities").innerHTML = "XP Multi: x" + displayBig(game.xp.multiplier) + "<br>Cooldowns: /" + numberShort(game.xp.cooldown)
         if (game.prestige.reset == true) {document.getElementById("petRarities").innerHTML += "<br>Exponent: ^" + displayBig(game.xp.expo)}
+        if (game.research.upgrades[11] >= 1) {document.getElementById("petRarities").innerHTML += "<br>Next auto: " + numberToTime(60 - game.xp.autoTicks / 20)}
     }
     size = petButtons.length
     for (i = 0; i < size; i++) { //If the player has the unlock requirement for a crate button AND is inside the specific tab, the button will show, either it will hide
-        if (game.player.unlocks >= petButtons[i].unlock && JSON.stringify(game.player.currentTab) == JSON.stringify([2, 2])) { document.getElementById(petButtons[i].name).style.display = "block" }
+        if (game.player.unlocks >= petButtons[i].unlock && currentTab == "[2,2]") { document.getElementById(petButtons[i].name).style.display = "block" }
         else { document.getElementById(petButtons[i].name).style.display = "none" }
+    }
+    if (currentTab == "[2,2]" && game.pets.oddsDisplay == -1) {
+        document.getElementById("petRarities").innerHTML = ""
+        if (game.pets.luck != 1) {document.getElementById("petRarities").innerHTML += "Luck: x" + numberShort(game.pets.luck) + "<br>"}
+        if (game.pets.cooldown != 1) {document.getElementById("petRarities").innerHTML += "Cooldowns: /" + numberShort(game.pets.cooldown) + "<br>"}
+        if (game.research.upgrades[25] >= 1) {document.getElementById("petRarities").innerHTML += "Next auto: " + numberToTime(60 - game.pets.autoTicks / 20) + "<br>"}
     }
     size = XPBoostButtons.length
     for (i = 0; i < size; i++) { //If the player has the unlock requirement for an xp boost button AND is inside the specific tab, the button will show, either it will hide
-        if (game.player.unlocks >= XPBoostButtons[i].unlock && JSON.stringify(game.player.currentTab) == JSON.stringify([2, 3])) { document.getElementById(XPBoostButtons[i].name).style.display = "block" }
+        if (game.player.unlocks >= XPBoostButtons[i].unlock && currentTab == "[2,3]") { document.getElementById(XPBoostButtons[i].name).style.display = "block" }
         else { document.getElementById(XPBoostButtons[i].name).style.display = "none" }
     }
-    if (JSON.stringify(game.player.currentTab) == JSON.stringify([2, 3])) {document.getElementById("petRarities").innerHTML = XPBoostEffects()}
+    if (currentTab == "[2,3]") {document.getElementById("petRarities").innerHTML = XPBoostEffects()}
     size = tokenUpgrades.length
-    if (game.player.unlocks >= 18 && JSON.stringify(game.player.currentTab) == JSON.stringify([2, 4])) {
+    if (game.player.unlocks >= 18 && currentTab == "[2,4]") {
         document.getElementById("tokenButton0").style.display = "block"
-        document.getElementById("petRarities").innerHTML = ""
+        let divider = tokenSoftcapEffect()
+        document.getElementById("petRarities").innerHTML = "Base token multi: x" + numberShort(game.tokens.gain * 10 * divider) + "<br>Softcap divider: /" + numberShort(divider)
+        if (game.tokens.softcapExpo < 1) {document.getElementById("petRarities").innerHTML += "<br>Softcap expo: ^" + numberShort(game.tokens.softcapExpo)}
     }
     else { document.getElementById("tokenButton0").style.display = "none" } //This is the check for every token upgrade
     for (i = 1; i < size; i++) {
-        if (tokenUpgradeAvailable(i) && JSON.stringify(game.player.currentTab) == JSON.stringify([2, 4])) { document.getElementById(tokenUpgrades[i].name).style.display = "block" }
+        if (tokenUpgradeAvailable(i) && currentTab == "[2,4]") { document.getElementById(tokenUpgrades[i].name).style.display = "block" }
         else { document.getElementById(tokenUpgrades[i].name).style.display = "none" }
     }
-    if (JSON.stringify(game.player.currentTab) == JSON.stringify([3, 1]) && game.prestige.reset == false) {document.getElementById("prestigeButton").style.display = "block"}
+    if (currentTab == "[3,1]" && game.prestige.reset == false) {document.getElementById("prestigeButton").style.display = "block"}
     else {document.getElementById("prestigeButton").style.display = "none"}
+    size = researchButtons.length
+    for (i = 0; i < size; i++) {
+        if (currentTab == "[3,1]" && game.prestige.reset == true && game.player.unlocks >= researchButtons[i].unlock) {document.getElementById(researchButtons[i].name).style.display = "block"}
+        else {document.getElementById(researchButtons[i].name).style.display = "none"}
+    }
+    if (currentTab == "[3,1]" && game.prestige.reset == true) {
+        document.getElementById("ResearchMenu").style.display = "block"
+        document.getElementById("petRarities").innerHTML = "RP Multi: x" + numberShort(game.research.multi) + "<br>Cooldowns: /" + numberShort(game.research.cooldown)
+    }
+    else {document.getElementById("ResearchMenu").style.display = "none"}
 }
 setInterval(displayTabContent, 50)
 
@@ -118,6 +131,7 @@ setInterval(displayFunnies, 50)
 function displayPrestigeButtons() {
     let display = false
     for (let i = 0; i < prestigeSubTab.length; i++) {
+        display = false
         if (i == 0 && game.player.highestUnlocks >= 25 && game.player.tabDropdown == 3) {display = true}
         else {
             if (game.player.unlocks >= prestigeSubTab[i].unlock && game.prestige.reset == true && game.player.tabDropdown == 3) {display = true}
@@ -143,7 +157,7 @@ function XPTab() {
     let flicker = false
     let i = 0
     while (i < XPButtons.length && flicker == false) {
-        if (game.player.unlocks >= XPButtons[i].unlock && game.xp.buttonCooldowns[i] == 0) {
+        if (game.player.unlocks >= XPButtons[i].unlock && game.xp.buttonCooldowns[i] >= XPButtons[i].cooldown / game.xp.cooldown) {
             flicker = true
         }
         i++
@@ -155,7 +169,7 @@ function CrateTab() {
     let flicker = false
     let i = 0
     while (i < petButtons.length && flicker == false) {
-        if (game.player.unlocks >= petButtons[i].unlock && game.pets.buttonCooldowns[i] == 0) {
+        if (game.player.unlocks >= petButtons[i].unlock && game.pets.buttonCooldowns[i] >= petButtons[i].cooldown / game.pets.cooldown) {
             flicker = true
         }
         i++
@@ -167,9 +181,43 @@ function XPBoostTab() {
     let flicker = false
     let i = 0
     while (i < XPBoostButtons.length && flicker == false) {
-        if (game.player.unlocks >= XPBoostButtons[i].unlock && game.xpBoost.buttonCooldowns[i] == 0) {
+        if (game.player.unlocks >= XPBoostButtons[i].unlock && game.xpBoost.buttonCooldowns[i] >= XPBoostButtons[i].cooldown / game.xpBoost.cooldown) {
             flicker = true
         }
+        i++
+    }
+    return flicker
+}
+
+function TokenTab() {
+    let flicker = false
+    let i = 1
+    while (i < tokenUpgrades.length && flicker == false) {
+        if (tokenUpgradeAvailable(i) && canPurchaseTokenUpgrade(i)) {
+            flicker = true
+        }
+        i++
+    }
+    return flicker
+}
+
+function ResearchTab() {
+    let flicker = false
+    let i = 0
+    while (i < researchButtons.length && flicker == false) {
+        if (game.player.unlocks >= researchButtons[i].unlock && game.research.buttonCooldowns[i] >= researchButtons[i].cooldown / game.research.cooldown) {
+            flicker = true
+        }
+        i++
+    }
+    return flicker
+}
+
+function MasteryTab() {
+    let flicker = false
+    let i = 1
+    while (i < mastery.length && flicker == false) {
+        if (canBuyMastery(i)) {flicker = true}
         i++
     }
     return flicker

@@ -2,6 +2,23 @@ Check Back Reclocked Changelog (dd/mm/yy for americans)
 Version number is for ingame checks (it only checks for the x in x.2) to avoid NaN's on update
 ------------------------------
 
+Version 5 (v0.2): Prestige update (04/07/26)
+-Content lines (click to reveal spoilers) (if where you're seeing this doesn't support spoiler tags, well, sad. Changes that refer to new features are also spoilered)
+    ||-Prestige. Resets all your progress (except daily and stats like time played) and applies harsh nerfs. Unlocks a new feature + raises level cap (capped at 1e100 but doubt you'll get there, I have no need to cap your levels right now so yea, keep going)||
+    ||-Research. Unlocked on prestige, collect research power which passively generates data towards powerful research upgrades||
+    ||-Pet mastery. Master your pets to obtain a new "mastery points" resource, which is used to master more pets. Obtain bonuses based on mastered pets||
+    ||-New buttons everywhere! Button bonanza. And also new stats you haven't seen yet like xp expo or crates cooldown||
+-Other changes
+    -Added movable gradients to xp bar + pet backgrouds, we love tiny details here
+    -Collect/buy all in current tab
+    -Automation. Unlocked somewhere in ||Research||, in the form of collector cranes. Farming simulator next? (:
+    -Daily rewards cooldown has been remade... again. Timer goes up to 7d, and claiming reduces it by 1d. AKA you can now stack 7 days of playtime to claim it 7 times (perfect for holidays)
+    -Added and removed bugs, don't know which exactly but like every file is modified
+    -There's also a bunch of hand-made art (and a few bits done by Hestia, so thank your neighbour foxmoth) (inspired by badly drawn world from ngu idle)
+    -New daily upgrade, giving some progress towards a new feature.
+    -I have more free time now :)
+    -Endgame: ||Level 5b, but all researches + token upgrades is better||
+
 Version 4.1: Daily sync (07/04/26)
 -Daily rewards cooldown now gets set to be ready at midnight UTC (GMT +0) globally. Has no real effect in progression balance
 

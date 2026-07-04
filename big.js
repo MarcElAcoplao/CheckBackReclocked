@@ -30,22 +30,9 @@ function addBig(a, b) { //a is an array [mantissa, exponent] and b is another ar
 
 function substractBig(a, b) { //a is an array [mantissa, exponent] and b is another array [mantissa, exponent]
     if (a.length == 2 && b.length == 2) {
-        let finalMantissa = 0
-        let finalExponent = 0
-        let finalNumber = 0
-        let expoDifference = a[1] - b[1]
-        if (expoDifference >= 15) { //example: 1e20 - 1e5 = 1e20
-            finalNumber = a
-        }
-        else if (expoDifference <= -15) { //example: 1e5 - 1e20 = -1e20
-            finalNumber = [-b[0], b[1]]
-        }
-        else {
-            finalMantissa = a[0] - b[0] / (10 ** expoDifference)
-            finalExponent = a[1]
-            finalNumber = adjustMantissa([finalMantissa, finalExponent])
-        }
-        return finalNumber
+        let firstNumber = a
+        let secondNumber = negateBig(b)
+        return addBig(firstNumber, secondNumber)
     }
     else {
         let firstNumber = 0
@@ -126,6 +113,12 @@ function exponentBig(a, b) { //x^y where x = [a0, a1] and y = [b0, b1], and [a, 
     }
 }
 
+function logBig(a) { //Implements the log base 10 of a function
+    if (a.length == 2) {return convertToBig(a[1] + Math.log10(a[0]))}
+    else if (typeof a === 'number' && !isNaN(a)) {return convertToBig(Math.log10(a))}
+    else return [1, 0]
+}
+
 function displayBig(a) { //Basically will format an array a that represents a number [x, y] where the number is x * 10^y
     if (a.length == 2) {
         let expoExpo = Math.floor(Math.log10(a[1]))
@@ -199,12 +192,11 @@ function adjustMantissa(a) { //Makes sure the mantissa is between 1 and 10, adju
         let mantissa = a[0]
         let absoluteMantissa = Math.abs(a[0])
         let exponent = a[1]
-        if (absoluteMantissa >= 1 && absoluteMantissa < 10) { } //If the mantissa is between 1 and 10, no need to fix anything
-        else {
+        if (absoluteMantissa < 1 || absoluteMantissa >= 10) {
             let offsetExponent = Math.floor(Math.log10(absoluteMantissa))
             exponent += offsetExponent
             mantissa /= 10 ** offsetExponent
-        }
+        } //If the mantissa is outside of [1, 10), it gets fixed
         let finalNumber = [mantissa, exponent]
         return finalNumber
     }
@@ -224,6 +216,25 @@ function convertToNormal(a) { //Converts an array that represents a big number t
     else return "Error: Number too big to be converted back"
 }
 
-function floor(a) { //Would make a number a = 12.3 as [1.23, 1] to their rounding [1.2, 1], if it makes sense
+function negateBig(a) { //From [1.23, 1] being 12.3, returns -12.3
+    if (a.length == 2) {return [-a[0], a[1]]}
+    else if (typeof a === 'number' && !isNaN(a)) {return convertToBig(-a)}
+    else return 1
+}
 
+function areEqual(a, b) {
+    if (a.length == 2 && b.length == 2) {
+        let result = false
+        if (a[0] == b[0] && a[1] == b[1]) {result = true}
+        return result
+    }
+    else {
+        let firstNumber = 0
+        let secondNumber = 0
+        if (typeof a === 'number' && !isNaN(a)) { firstNumber = convertToBig(a) }
+        else if (a.length == 2) firstNumber = a
+        if (typeof b === 'number' && !isNaN(b)) { secondNumber = convertToBig(b) }
+        else if (b.length == 2) secondNumber = b
+        return areEqual(firstNumber, secondNumber)
+    }
 }
