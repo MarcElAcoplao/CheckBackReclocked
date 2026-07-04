@@ -185,7 +185,7 @@ function rpStats() {
 
 function countPets(x, y) { //x = starting pet, y = final pet, both included: countPets(3, 6) = (3, 4, 5, 6)
     let count = 0
-    for (i = x; i <= y; i++) { if (game.pets.individualDiscovered[i] == 1) { count++ } }
+    for (i = x; i <= y; i++) { if (game.pets.amount[i] >= 1) { count++ } }
     return count
 }
 

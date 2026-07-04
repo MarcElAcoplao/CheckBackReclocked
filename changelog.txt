@@ -2,6 +2,9 @@ Check Back Reclocked Changelog (dd/mm/yy for americans)
 Version number is for ingame checks (it only checks for the x in x.2) to avoid NaN's on update
 ------------------------------
 
+Version 5.1: Research 7 fix (04/07/26)
+-Fixed research 7 not working as intended, and a flicker bug
+
 Version 5 (v0.2): Prestige update (04/07/26)
 -Content lines (click to reveal spoilers) (if where you're seeing this doesn't support spoiler tags, well, sad. Changes that refer to new features are also spoilered)
     ||-Prestige. Resets all your progress (except daily and stats like time played) and applies harsh nerfs. Unlocks a new feature + raises level cap (capped at 1e100 but doubt you'll get there, I have no need to cap your levels right now so yea, keep going)||
