@@ -122,20 +122,22 @@ function isResearchAvailable(x) {
 function showResearchInfo(x) {
     if (x != 0) {
         let result = ""
-        result += "<br><br><center><p style='color: white'><span style='font-size: 32px; font-weight: bold'>" + researches[x].name + "</span><br>You have " + wholeNumberShort(game.research.upgrades[x]) + "<br><br></p><br><img src='img/research/" + x + ".png' style='width: 50%' onerror=\"this.onerror=null;this.src='img/pets/0.png';\"><br><p style='color: white'><span style='font-size: 32px; font-weight: bold'>Effects:</span><br>" + researches[x].effect + "</p></center>"
-        document.getElementById("researchText").innerHTML = result
         if (game.research.upgrades[x] >= 1) {
+            result += "<br><br><center><p style='color: white'><span style='font-size: 32px; font-weight: bold'>" + researches[x].name + "</span><br>Research completed<br><br></p><br><img src='img/research/" + x + ".png' style='width: 50%' onerror=\"this.onerror=null;this.src='img/pets/0.png';\"><br><p style='color: white'><span style='font-size: 32px; font-weight: bold'>Effects:</span><br>" + researches[x].effect + "</p></center>"
             document.getElementById("researchBarText").innerHTML = "Data: " + numberShort(researches[x].data) + "/" + numberShort(researches[x].data)
             document.getElementById("researchBarBack").style.width = "100%"
         }
         else if (game.research.active == x) {
+            result += "<br><br><center><p style='color: white'><span style='font-size: 32px; font-weight: bold'>" + researches[x].name + "</span><br>Research in progress<br><br></p><br><img src='img/research/" + x + ".png' style='width: 50%' onerror=\"this.onerror=null;this.src='img/pets/0.png';\"><br><p style='color: white'><span style='font-size: 32px; font-weight: bold'>Effects:</span><br>" + researches[x].effect + "</p></center>"
             document.getElementById("researchBarText").innerHTML = "Data: " + numberShort(game.research.data) + "/" + numberShort(researches[x].data) + "<br>Time left: " + numberToTime((researches[x].data - game.research.data) / Math.max(game.research.power, 0.01))
             document.getElementById("researchBarBack").style.width = (game.research.data * 100 / researches[x].data) + "%"
         }
         else {
+            result += "<br><br><center><p style='color: white'><span style='font-size: 32px; font-weight: bold'>" + researches[x].name + "</span><br>Research pending<br><br></p><br><img src='img/research/" + x + ".png' style='width: 50%' onerror=\"this.onerror=null;this.src='img/pets/0.png';\"><br><p style='color: white'><span style='font-size: 32px; font-weight: bold'>Effects:</span><br>" + researches[x].effect + "</p></center>"
             document.getElementById("researchBarText").innerHTML = "Data: 0/" + numberShort(researches[x].data) + "<br>Expected time: " + numberToTime(researches[x].data / Math.max(game.research.power, 0.01))
             document.getElementById("researchBarBack").style.width = "0%"
         }
+        document.getElementById("researchText").innerHTML = result
     }
     else {
         document.getElementById("researchText").innerHTML = "<br><br>"
