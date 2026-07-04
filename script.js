@@ -477,6 +477,7 @@ function updateSmall() { //This part checks if buttons are available or not, add
     while (compareBigEqual(game.xp.level, ranks[i + 1].level)) { i++ }
     game.player.ranks = i
     document.getElementById("rank").innerHTML = ranks[game.player.ranks].name + " Clicker"
+    const bar = document.getElementById("XPBarBack")
     if (JSON.stringify(game.player.currentTab) != JSON.stringify([3, 1])) {
         document.getElementById("level").innerHTML = "Level " + displayRoundBig(game.xp.level)
         if (JSON.stringify(game.xp.level) == JSON.stringify(game.xp.levelCap)) { document.getElementById("level").innerHTML += " (Capped, pseudo: " + displayRoundBig(game.xp.pseudoLevel) + " )" }
@@ -504,7 +505,8 @@ function updateSmall() { //This part checks if buttons are available or not, add
             document.getElementById("XPBarText").innerHTML = "XP to next x10 levels: " + displayBig(ProgressToNextOoM) + "/" + displayBig(XPToNextOoM)
             document.getElementById("XPBarBack").style.width = (convertToNormal(divideBig(ProgressToNextOoM, XPToNextOoM)) * 100) + "%"
         }
-        document.getElementById("XPBarBack").style.backgroundColor = "#0b0"
+        bar.style.setProperty("--color1", "rgb(0, 187, 0)");
+        bar.style.setProperty("--color2", "rgb(176, 251, 176)");
         /*
   else if (game.player.unlocks < unlockLevels.length) { //Displays "XP to next unlock" in xp bar, after unlocks space out significantly
   XPToNextUnlock = levelToXP(unlockLevels[game.player.unlocks])
@@ -529,7 +531,8 @@ function updateSmall() { //This part checks if buttons are available or not, add
             document.getElementById("XPBarText").innerHTML = "Data: " + numberShort(game.research.data) + "/" + numberShort(researches[game.research.active].data)
             document.getElementById("XPBarBack").style.width = game.research.data / researches[game.research.active].data * 100 + "%"
         }
-        document.getElementById("XPBarBack").style.backgroundColor = "rgb(7, 228, 248)"
+        bar.style.setProperty("--color1", "rgb(7, 228, 248)");
+        bar.style.setProperty("--color2", "rgb(113, 97, 237)");
     }
 }
 setInterval(updateSmall, 50)
