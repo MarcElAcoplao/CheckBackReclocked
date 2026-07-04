@@ -434,7 +434,7 @@ function updateSmall() { //This part checks if buttons are available or not, add
     else {
         document.getElementById("ResearchTab").classList.remove("flickering")
     }
-    if (MasteryTab()) {
+    if (game.player.unlocks >= 26 && MasteryTab()) {
         document.getElementById("MasteryTab").classList.add("flickering")
         prestigeFlicker = true
     }
