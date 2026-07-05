@@ -544,7 +544,7 @@ function updateLarge() {
     for (let i = 0; i < size; i++) { //Updates every xp cooldown based on the difference between current time and last time they have been updated. NOTE: This has to be copied for every set of button cooldowns
         if (game.xp.buttonCooldowns[i] >= 0) { game.xp.buttonCooldowns[i] += ((Date.now() - game.player.timeOfLastUpdate) / (1000 / game.player.speed)) }
         if (game.xp.buttonCooldowns[i] < 0 || !game.xp.buttonCooldowns[i]) { game.xp.buttonCooldowns[i] = 0 }
-        if (game.research.upgrades[11] == 0 && game.player.unlocks < XPButtons[i].unlock) {
+        if (!(game.research.upgrades[11] == 0 && game.player.unlocks < XPButtons[i].unlock)) {
             game.xp.buttonCooldowns[i] = Math.min(game.xp.buttonCooldowns[i], XPButtons[i].cooldown / game.xp.cooldown)
         }
     }
@@ -552,7 +552,7 @@ function updateLarge() {
     for (let i = 0; i < size; i++) { //Updates every pet cooldown based on the difference between current time and last time they have been updated.
         if (game.pets.buttonCooldowns[i] >= 0) { game.pets.buttonCooldowns[i] += ((Date.now() - game.player.timeOfLastUpdate) / (1000 / game.player.speed)) }
         if (game.pets.buttonCooldowns[i] < 0 || !game.pets.buttonCooldowns[i]) { game.pets.buttonCooldowns[i] = 0 }
-        if (game.research.upgrades[25] == 0 && game.player.unlocks < petButtons[i].cooldown) {
+        if (!(game.research.upgrades[25] == 0 && game.player.unlocks < petButtons[i].cooldown)) {
             game.pets.buttonCooldowns[i] = Math.min(game.pets.buttonCooldowns[i], petButtons[i].cooldown / game.pets.cooldown)
         }
     }
@@ -560,7 +560,7 @@ function updateLarge() {
     for (let i = 0; i < size; i++) { //Updates every xp cooldown based on the difference between current time and last time they have been updated. NOTE: This has to be copied for every set of button cooldowns
         if (game.xpBoost.buttonCooldowns[i] >= 0) { game.xpBoost.buttonCooldowns[i] += ((Date.now() - game.player.timeOfLastUpdate) / (1000 / game.player.speed)) }
         if (game.xpBoost.buttonCooldowns[i] < 0 || !game.xpBoost.buttonCooldowns[i]) { game.xpBoost.buttonCooldowns[i] = 0 }
-        if (game.research.upgrades[33] == 0 && game.player.unlocks < XPBoostButtons[i].unlock) { 
+        if (!(game.research.upgrades[33] == 0 && game.player.unlocks < XPBoostButtons[i].unlock)) { 
             game.xpBoost.buttonCooldowns[i] = Math.min(game.xpBoost.buttonCooldowns[i], XPBoostButtons[i].cooldown / game.xpBoost.cooldown)
         }
     }
@@ -568,7 +568,7 @@ function updateLarge() {
     for (let i = 0; i < size; i++) {
         if (game.research.buttonCooldowns[i] >= 0) { game.research.buttonCooldowns[i] += ((Date.now() - game.player.timeOfLastUpdate) / (1000 / game.player.speed)) }
         if (game.research.buttonCooldowns[i] < 0 || !game.research.buttonCooldowns[i]) { game.research.buttonCooldowns[i] = 0 }
-        if (1 > 0 && game.player.unlocks < researchButtons[i].unlock) { //Change when research automation is added
+        if (!(1 > 0 && game.player.unlocks < researchButtons[i].unlock)) { //Change when research automation is added
             game.research.buttonCooldowns[i] = Math.min(game.research.buttonCooldowns[i], researchButtons[i].cooldown / game.research.cooldown)
         }
     }
