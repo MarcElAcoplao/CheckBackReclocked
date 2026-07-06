@@ -220,7 +220,7 @@ function calculateResearchBonuses() {
     if (game.research.upgrades[33] >= 1) { baseXPBCooldown *= 1.4 }
     game.researchBonuses.xpBCooldown = baseXPBCooldown
     let baseTokenMulti = 1 //Token Multipliers from research
-    if (game.research.upgrades[21] >= 1) { baseTokenMulti *= 1.5 }
+    if (game.research.upgrades[20] >= 1) { baseTokenMulti *= 1.5 }
     if (game.research.upgrades[23] >= 1) { baseTokenMulti *= 1.5 }
     if (game.research.upgrades[28] >= 1) { baseTokenMulti *= 2 }
     game.researchBonuses.tokenMulti = baseTokenMulti

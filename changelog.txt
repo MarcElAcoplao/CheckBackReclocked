@@ -2,6 +2,10 @@ Check Back Reclocked Changelog (dd/mm/yy for americans)
 Version number is for ingame checks (it only checks for the x in x.2) to avoid NaN's on update
 ------------------------------
 
+Version 5.2: Some other fixes including ghost crates (06/07/26)
+-Fixed one daily reward giving ghost crates before intended
+-Fixed other stuff
+
 Version 5.1: Research 7 fix (04/07/26)
 -Fixed research 7 not working as intended, and a flicker bug
 

@@ -96,9 +96,10 @@ function buyDailyUpgrade(x) {
                 game.dailyBonuses.luckCharges++
                 if (game.research.upgrades[25] >= 1) {
                     let i = 0
-                    while ( i < (petButtons.length - 1) && game.player.unlocks >= petButtons[i].unlock) {i++}
+                    while ( i < (petButtons.length - 1) && game.player.unlocks >= petButtons[i+1].unlock) {i++}
                     game.pets.buttonCooldowns[i] = petButtons[i].cooldown
                     unboxPet(i, 1)
+                    console.log(i)
                 }
             }
             if (x == 5) {
