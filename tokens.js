@@ -122,6 +122,7 @@ function tokenUpgradeAvailable(x) {
             result = completed
         }
     }
+    if (x == 11 && game.prestige.reset == false) {result = false}
     return result
 }
 

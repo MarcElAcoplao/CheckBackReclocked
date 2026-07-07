@@ -20,6 +20,7 @@ const mainSubTab = [ //Represents the names and unlocks for each subtab inside t
 const prestigeSubTab = [
     { name: "ResearchTab", unlock: 0 },
     { name: "MasteryTab", unlock: 26 },
+    { name: "ReplicantiTab", unlock: 35 },
 ]
 
 const otherFunniesDisplay = [
@@ -93,6 +94,12 @@ function displayTabContent() {
         document.getElementById("petRarities").innerHTML = "RP Multi: x" + numberShort(game.research.multi) + "<br>Cooldowns: /" + numberShort(game.research.cooldown)
     }
     else {document.getElementById("ResearchMenu").style.display = "none"}
+    size = replicantiButtons.length
+    for (i = 0; i < size; i++) {
+        if (currentTab == "[3,2]" && game.player.unlocks >= replicantiButtons[i].unlock) {document.getElementById(replicantiButtons[i].name).style.display = "block"}
+        else {document.getElementById(replicantiButtons[i].name).style.display = "none"}
+    }
+
 }
 setInterval(displayTabContent, 50)
 

@@ -76,7 +76,7 @@ function reset() {
             cratesOpened: 0, //Normal
             online: false, //If this is false, whenever it updates cooldowns it won't count for playtime
             crateEmoji: true, //Bool
-            versionNumber: 4, //Normal
+            versionNumber: 5, //Normal
             cratesComplete: 0, //Normal
         },
         daily: { //This is entirely remade
@@ -132,6 +132,16 @@ function reset() {
             xpBCooldown: 1, //Normal
             tokenMulti: 1, //Normal
         },
+        replicanti: {
+            amount: [1, 0], //Big
+            multi: [1, 0], //Big
+            expo: [1, 0], //Big
+            cooldown: 1, //Normal
+            buttonCooldowns: [900, 1800], //List of normals 
+        },
+        replicantiBonuses: {
+            xpMulti: [1, 0], //Big
+        },
         mining: { //This is a test
             depth: [0, 0], //Big
             oreInv: [[0, 0], [0, 0], [0, 0]], //List of bigs
@@ -141,7 +151,7 @@ function reset() {
             spawnSpeed: 1, //Normal
             gridSize: 1, //Normal
         },
-        tycoon: {
+        tycoon: { //Also a test
             money: [0, 0], //Big
             tier: 0, //Normal
             upgrades: [0, 0, 0, 0, 0], //List of normals
@@ -246,15 +256,15 @@ function updateStuffOnLoad() {
     for (let i = 0; i < researches.length; i++) {
         if (!game.research.upgrades[i]) { game.research.upgrades[i] = 0 }
     }
-    if (!game.mining.oreCooldowns) {game.mining.oreCooldowns = [0]}
-    if (!game.mining.oreInv) {game.mining.oreInv = [[0, 0], [0, 0]]}
-    if (!game.mining.grid) {game.mining.grid = [[0, 0], [0, 0]]}
+    if (!game.mining.oreCooldowns) { game.mining.oreCooldowns = [0] }
+    if (!game.mining.oreInv) { game.mining.oreInv = [[0, 0], [0, 0]] }
+    if (!game.mining.grid) { game.mining.grid = [[0, 0], [0, 0]] }
     for (let i = 0; i < game.mining.gridSize; i++) {
-        if (!game.mining.grid[i]) {game.mining.grid[i] = [0, 0]}
+        if (!game.mining.grid[i]) { game.mining.grid[i] = [0, 0] }
     }
-    if (!game.pets.masteredPetsList) {game.pets.masteredPetsList = [0, 0, 0]}
+    if (!game.pets.masteredPetsList) { game.pets.masteredPetsList = [0, 0, 0] }
     for (let i = 0; i < mastery.length; i++) {
-        if (!game.pets.masteredPetsList[i]) {game.pets.masteredPetsList[i] = 0}
+        if (!game.pets.masteredPetsList[i]) { game.pets.masteredPetsList[i] = 0 }
     }
     if (!game.player.versionNumber) {
         game.player.versionNumber = 2
@@ -294,6 +304,10 @@ function updateStuffOnLoad() {
         resetPetCooldowns()
         resetXPBoostCooldowns()
     }
+    /*if (game.player.versionNumber == 5) {
+        game.replicanti.amount = [1, 0]
+        game.versionNumber = 6
+    }*/
     changeTheme(game.player.currentTheme)
 }
 updateStuffOnLoad()
@@ -308,7 +322,8 @@ function updateSmall() { //This part checks if buttons are available or not, add
         document.getElementById("selectedPetImg").style.display = "inline-block"
         document.getElementById("selectedPetImg").src = "img/pets/" + game.pets.equipped + ".png"
     }
-    if (JSON.stringify(game.player.currentTab) == JSON.stringify([2, 1])) {
+    let currentTab = JSON.stringify(game.player.currentTab)
+    if (currentTab == JSON.stringify([2, 1])) {
         for (let i = 0; i < XPButtons.length; i++) { //Displays whenever a button is ready to be clicked for x xp or whenever you have to wait y time to click it again
             if (game.xp.buttonCooldowns[i] < XPButtons[i].cooldown / game.xp.cooldown) {
                 document.getElementById(XPButtons[i].name).disabled = true
@@ -317,11 +332,11 @@ function updateSmall() { //This part checks if buttons are available or not, add
             else {
                 document.getElementById(XPButtons[i].name).disabled = false
                 document.getElementById(XPButtons[i].name).innerHTML = "Gain " + displayBig(calculateXPGain(i)) + " XP"
-                if (game.research.upgrades[11] >= 1) {document.getElementById(XPButtons[i].name).innerHTML += " (Auto claims: " + numberShort(game.xp.buttonCooldowns[i] / (XPButtons[i].cooldown / game.xp.cooldown)) + ")"}
+                if (game.research.upgrades[11] >= 1) { document.getElementById(XPButtons[i].name).innerHTML += " (Auto claims: " + numberShort(game.xp.buttonCooldowns[i] / (XPButtons[i].cooldown / game.xp.cooldown)) + ")" }
             }
         }
     }
-    if (JSON.stringify(game.player.currentTab) == JSON.stringify([2, 2])) {
+    if (currentTab == JSON.stringify([2, 2])) {
         for (let i = 0; i < petButtons.length; i++) { //Displays whenever a button is ready to be clicked to open a crate or whenever you have to wait y time "WARNING: WILL NEED BULK ADDITION"
             if (game.pets.buttonCooldowns[i] < petButtons[i].cooldown / game.pets.cooldown) {
                 document.getElementById(petButtons[i].name).disabled = true
@@ -330,14 +345,14 @@ function updateSmall() { //This part checks if buttons are available or not, add
             else {
                 document.getElementById(petButtons[i].name).disabled = false
                 document.getElementById(petButtons[i].name).innerHTML = ""
-                if (game.player.crateEmoji == true) { document.getElementById(petButtons[i].name).innerHTML += petButtons[i].emoji}
+                if (game.player.crateEmoji == true) { document.getElementById(petButtons[i].name).innerHTML += petButtons[i].emoji }
                 document.getElementById(petButtons[i].name).innerHTML += " Open a " + petButtons[i].crateName + " crate"
-                if (game.research.upgrades[25] >= 1) {document.getElementById(petButtons[i].name).innerHTML += " (Auto claims: " + numberShort(game.pets.buttonCooldowns[i] / (petButtons[i].cooldown / game.pets.cooldown)) + ") "}
-                if (game.player.crateEmoji == true) { document.getElementById(petButtons[i].name).innerHTML += petButtons[i].emoji}
+                if (game.research.upgrades[25] >= 1) { document.getElementById(petButtons[i].name).innerHTML += " (Auto claims: " + numberShort(game.pets.buttonCooldowns[i] / (petButtons[i].cooldown / game.pets.cooldown)) + ") " }
+                if (game.player.crateEmoji == true) { document.getElementById(petButtons[i].name).innerHTML += petButtons[i].emoji }
             }
         }
     }
-    if (JSON.stringify(game.player.currentTab) == JSON.stringify([2, 3])) {
+    if (currentTab == JSON.stringify([2, 3])) {
         for (let i = 0; i < XPBoostButtons.length; i++) { //Displays whenever a button is ready to be clicked for x xpboost or whenever you have to wait y time to click it again
             if (game.xpBoost.buttonCooldowns[i] < XPBoostButtons[i].cooldown / game.xpBoost.cooldown) {
                 document.getElementById(XPBoostButtons[i].name).disabled = true
@@ -346,11 +361,11 @@ function updateSmall() { //This part checks if buttons are available or not, add
             else {
                 document.getElementById(XPBoostButtons[i].name).disabled = false
                 document.getElementById(XPBoostButtons[i].name).innerHTML = "Gain " + displayBig(calculateXPBGain(i)) + " XPBoost"
-                if (game.research.upgrades[33] >= 1) {document.getElementById(XPBoostButtons[i].name).innerHTML += "(Auto claims: " + numberShort(game.xpBoost.buttonCooldowns[i] / (XPBoostButtons[i].cooldown / game.xpBoost.cooldown)) + ")"}
+                if (game.research.upgrades[33] >= 1) { document.getElementById(XPBoostButtons[i].name).innerHTML += "(Auto claims: " + numberShort(game.xpBoost.buttonCooldowns[i] / (XPBoostButtons[i].cooldown / game.xpBoost.cooldown)) + ")" }
             }
         }
     }
-    if (JSON.stringify(game.player.currentTab) == JSON.stringify([2, 4])) {
+    if (currentTab == JSON.stringify([2, 4])) {
         if (game.tokens.bankAmount >= 1) { document.getElementById("tokenButton0").disabled = false }
         else { document.getElementById("tokenButton0").disabled = true }
         document.getElementById("tokenButton0").innerHTML = "Tokens: " + numberShort(game.tokens.amount) + "<br>Ticks: " + numberShort(game.tokens.ticks) + "; Next gain: " + numberShort(game.tokens.gain) + "<br>Bank amount: " + numberShort(game.tokens.bankAmount) + " (Click to collect)<br>Average gain: " + numberShort(game.tokens.bankAmount / Math.max(1, game.tokens.ticks)) + "<br>Next auto tick: " + numberToTime((1200 - game.tokens.autoTicks) / 20)
@@ -360,7 +375,7 @@ function updateSmall() { //This part checks if buttons are available or not, add
             else { document.getElementById(tokenUpgrades[i].name).disabled = true }
         }
     }
-    if (JSON.stringify(game.player.currentTab) == JSON.stringify([3, 1])) {
+    if (currentTab == JSON.stringify([3, 1])) {
         for (let i = 0; i < researchButtons.length; i++) { //Displays whenever a button is ready to be clicked for x xpboost or whenever you have to wait y time to click it again
             if (game.research.buttonCooldowns[i] < researchButtons[i].cooldown / game.research.cooldown) {
                 document.getElementById(researchButtons[i].name).disabled = true
@@ -369,6 +384,19 @@ function updateSmall() { //This part checks if buttons are available or not, add
             else {
                 document.getElementById(researchButtons[i].name).disabled = false
                 document.getElementById(researchButtons[i].name).innerHTML = "Gain " + displayBig(calculateRPgain(i)) + " RP"
+            }
+        }
+    }
+    if (currentTab == JSON.stringify([3, 2])) {
+        for (let i = 0; i < replicantiButtons.length; i++) {
+            if (game.replicanti.buttonCooldowns[i] < replicantiButtons[i].cooldown / game.replicanti.cooldown) {
+                document.getElementById(replicantiButtons[i].name).disabled = true
+                document.getElementById(replicantiButtons[i].name).innerHTML = "Check back in " + numberToTime(replicantiButtons[i].cooldown / game.replicanti.cooldown - game.replicanti.buttonCooldowns[i])
+            }
+            else {
+                document.getElementById(replicantiButtons[i].name).disabled = false
+                document.getElementById(replicantiButtons[i].name).innerHTML = "Gain x" + displayBig(calculateReplicantiGain(i)) + " Replicanti"
+                if (compareBig(game.replicanti.expo, [0, 0])) { document.getElementById(replicantiButtons[i].name).innerHTML += "<br>And ^" + displayBig(calculateReplicantiExpo(i)) + " Replicanti" }
             }
         }
     }
@@ -478,7 +506,28 @@ function updateSmall() { //This part checks if buttons are available or not, add
     game.player.ranks = i
     document.getElementById("rank").innerHTML = ranks[game.player.ranks].name + " Clicker"
     const bar = document.getElementById("XPBarBack")
-    if (JSON.stringify(game.player.currentTab) != JSON.stringify([3, 1])) {
+    if (JSON.stringify(game.player.currentTab) == JSON.stringify([3, 1])) {
+        document.getElementById("level").innerHTML = "Research Power: " + numberShort(game.research.power)
+        if (game.research.active == 0) {
+            document.getElementById("XPBarText").innerHTML = "No research active, select one in \"View Researches\""
+            document.getElementById("XPBarBack").style.width = "0%"
+        }
+        else {
+            document.getElementById("XPBarText").innerHTML = "Data: " + numberShort(game.research.data) + "/" + numberShort(researches[game.research.active].data)
+            document.getElementById("XPBarBack").style.width = game.research.data / researches[game.research.active].data * 100 + "%"
+        }
+        bar.style.setProperty("--color1", "rgb(7, 228, 248)");
+        bar.style.setProperty("--color2", "rgb(113, 97, 237)");
+    }
+    else if (JSON.stringify(game.player.currentTab) == JSON.stringify([3, 2])) {
+        document.getElementById("level").innerHTML = "Replicanti " + displayBig(game.replicanti.amount)
+        let percent = convertToNormal(logBig(logBig(addBig(game.replicanti.amount, [9, 0])))) / 3
+        document.getElementById("XPBarBack").style.width = percent + "%"
+        document.getElementById("XPBarText").innerHTML = "Progress to limit: " + numberShort(percent) + "% (1e1e300)"
+        bar.style.setProperty("--color1", "rgb(248, 7, 7)");
+        bar.style.setProperty("--color2", "rgb(248, 108, 180)");
+    }
+    else {
         document.getElementById("level").innerHTML = "Level " + displayRoundBig(game.xp.level)
         if (JSON.stringify(game.xp.level) == JSON.stringify(game.xp.levelCap)) { document.getElementById("level").innerHTML += " (Capped, pseudo: " + displayRoundBig(game.xp.pseudoLevel) + " )" }
         //This bit is weird and gross
@@ -521,19 +570,6 @@ function updateSmall() { //This part checks if buttons are available or not, add
   document.getElementById("XPBarBack").style.width = (ProgressToNextUnlock / XPToNextRank * 100) + "%"
   } */
     }
-    else {
-        document.getElementById("level").innerHTML = "Research Power: " + numberShort(game.research.power)
-        if (game.research.active == 0) {
-            document.getElementById("XPBarText").innerHTML = "No research active, select one in \"View Researches\""
-            document.getElementById("XPBarBack").style.width = "0%"
-        }
-        else {
-            document.getElementById("XPBarText").innerHTML = "Data: " + numberShort(game.research.data) + "/" + numberShort(researches[game.research.active].data)
-            document.getElementById("XPBarBack").style.width = game.research.data / researches[game.research.active].data * 100 + "%"
-        }
-        bar.style.setProperty("--color1", "rgb(7, 228, 248)");
-        bar.style.setProperty("--color2", "rgb(113, 97, 237)");
-    }
 }
 setInterval(updateSmall, 50)
 
@@ -560,7 +596,7 @@ function updateLarge() {
     for (let i = 0; i < size; i++) { //Updates every xp cooldown based on the difference between current time and last time they have been updated. NOTE: This has to be copied for every set of button cooldowns
         if (game.xpBoost.buttonCooldowns[i] >= 0) { game.xpBoost.buttonCooldowns[i] += ((Date.now() - game.player.timeOfLastUpdate) / (1000 / game.player.speed)) }
         if (game.xpBoost.buttonCooldowns[i] < 0 || !game.xpBoost.buttonCooldowns[i]) { game.xpBoost.buttonCooldowns[i] = 0 }
-        if (!(game.research.upgrades[33] == 1 && game.player.unlocks >= XPBoostButtons[i].unlock)) { 
+        if (!(game.research.upgrades[33] == 1 && game.player.unlocks >= XPBoostButtons[i].unlock)) {
             game.xpBoost.buttonCooldowns[i] = Math.min(game.xpBoost.buttonCooldowns[i], XPBoostButtons[i].cooldown / game.xpBoost.cooldown)
         }
     }
@@ -570,6 +606,14 @@ function updateLarge() {
         if (game.research.buttonCooldowns[i] < 0 || !game.research.buttonCooldowns[i]) { game.research.buttonCooldowns[i] = 0 }
         if (!(1 < 0 && game.player.unlocks >= researchButtons[i].unlock)) { //Change when research automation is added
             game.research.buttonCooldowns[i] = Math.min(game.research.buttonCooldowns[i], researchButtons[i].cooldown / game.research.cooldown)
+        }
+    }
+    size = replicantiButtons.length
+    for (let i = 0; i < size; i++) {
+        if (game.replicanti.buttonCooldowns[i] >= 0) { game.replicanti.buttonCooldowns[i] += ((Date.now() - game.player.timeOfLastUpdate) / (1000 / game.player.speed)) }
+        if (game.replicanti.buttonCooldowns[i] < 0 || !game.replicanti.buttonCooldowns[i]) { game.replicanti.buttonCooldowns[i] = 0 }
+        if (!(1 < 0 && game.player.unlocks >= replicantiButtons[i].unlock)) { //Change when research automation is added
+            game.replicanti.buttonCooldowns[i] = Math.min(game.replicanti.buttonCooldowns[i], replicantiButtons[i].cooldown / game.replicanti.cooldown)
         }
     }
     if (game.daily.cooldown >= 0) { game.daily.cooldown += ((Date.now() - game.player.timeOfLastUpdate) / (1000 / game.player.speed)) }
@@ -674,17 +718,17 @@ function automationStuff(x) { //In charge of running through automation contents
         addTicks(1 + Math.floor(game.tokens.autoTicks / (1200 / game.tokens.cooldown) - 1))
         game.tokens.autoTicks = 0
     }
-    if (game.research.upgrades[11] >= 1) {game.xp.autoTicks += x}
+    if (game.research.upgrades[11] >= 1) { game.xp.autoTicks += x }
     if (game.xp.autoTicks >= 1200) {
         collectAllXP()
         game.xp.autoTicks = 0
     }
-    if (game.research.upgrades[25] >= 1) {game.pets.autoTicks += x}
+    if (game.research.upgrades[25] >= 1) { game.pets.autoTicks += x }
     if (game.pets.autoTicks >= 1200) {
         collectAllPets()
         game.pets.autoTicks = 0
     }
-    if (game.research.upgrades[33] >= 1) {game.xpBoost.autoTicks += x}
+    if (game.research.upgrades[33] >= 1) { game.xpBoost.autoTicks += x }
     if (game.xpBoost.autoTicks >= 1200) {
         collectAllXPBoost()
         game.xpBoost.autoTicks = 0
@@ -761,8 +805,8 @@ function unlockToLevel(x) {
 
 function roundRNG(x) { //Rounds a number based on rng, 1.3 has a 30% chance to round to 2 and 70% to round to 1
     let result = 0
-    if (Math.random() < x % 1) {result = Math.ceil(x)}
-    else {result = Math.floor(x)}
+    if (Math.random() < x % 1) { result = Math.ceil(x) }
+    else { result = Math.floor(x) }
     return result
 }
 
@@ -772,10 +816,10 @@ function help() {
 
 function collectAll() {
     let currentTab = JSON.stringify(game.player.currentTab)
-    if (currentTab == JSON.stringify([2, 1])) {collectAllXP()}
-    if (currentTab == JSON.stringify([2, 2])) {collectAllPets()}
-    if (currentTab == JSON.stringify([2, 3])) {collectAllXPBoost()}
-    if (currentTab == JSON.stringify([2, 4])) {buyAllTokens()}
-    if (currentTab == JSON.stringify([3, 1]) && game.prestige.reset == true) {collectAllRP()}
+    if (currentTab == JSON.stringify([2, 1])) { collectAllXP() }
+    if (currentTab == JSON.stringify([2, 2])) { collectAllPets() }
+    if (currentTab == JSON.stringify([2, 3])) { collectAllXPBoost() }
+    if (currentTab == JSON.stringify([2, 4])) { buyAllTokens() }
+    if (currentTab == JSON.stringify([3, 1]) && game.prestige.reset == true) { collectAllRP() }
     //call a different function based on tab, like a collect all xp function for xp
 }

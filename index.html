@@ -43,6 +43,7 @@
             <button class="button" id="PrestigeTab" style="display: none" onclick="tab(3)">PRESTIGE</button>
                 <button class="tabButton" id="ResearchTab" style="display: none" onclick="subtab([3, 1])"> · Researches</button>
                 <button class="tabButton" id="MasteryTab" style="display: none" onclick="openCloseMasteryTab()"> · Mastery</button>
+                <button class="tabButton" id="ReplicantiTab" style="display: none" onclick="subtab([3, 2])"> · Replicanti</button>
         </div>
 
         <div id="buttonsContainer">
@@ -114,6 +115,9 @@
             <button class="button" id="RPbutton10" style="display: none" onclick="rpButton(10)">Gain 11 RP</button>
             <button class="button" id="RPbutton11" style="display: none" onclick="rpButton(11)">Gain 12 RP</button>
             <button class="button" id="RPbutton12" style="display: none" onclick="rpButton(12)">Gain 13 RP</button>
+
+            <button class="button" id="replicantiButton0" style="display: none" onclick="replicantiButton(0)">Gain x2 Replicanti</button>
+            <button class="button" id="replicantiButton1" style="display: none" onclick="replicantiButton(1)">Gain x5 Replicanti</button>
         </div>
 
         <div id="infosContainer">
@@ -239,6 +243,7 @@
     <script src="prestige.js"></script>
     <script src="daily.js"></script>
     <script src="mastery.js"></script>
+    <script src="replicanti.js"></script>
     <script src="script.js"></script>
     <script src="stats.js"></script>
     <script defer>setAutoSave()</script>

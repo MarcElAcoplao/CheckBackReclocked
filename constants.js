@@ -1,4 +1,4 @@
-const unlockLevelsSmall = [2, 3, 4, 6, 8, 12, 20, 30, 40, 60, 80, 100, 150, 200, 250, 300, 400, 500, 1000, 2000, 5000, 15000, 30000, 50000, 100000, 101000, 10**6, 5*10**6, 1.5*10**7, 5*10**7, 10**8, 4*10**8, 10**9, 5*10**9] //This will probably be remade completely
+const unlockLevelsSmall = [2, 3, 4, 6, 8, 12, 20, 30, 40, 60, 80, 100, 150, 200, 250, 300, 400, 500, 1000, 2000, 5000, 15000, 30000, 50000, 100000, 101000, 10**6, 5*10**6, 1.5*10**7, 5*10**7, 10**8, 4*10**8, 10**9, 5*10**9/*, 5*10**10, 2*10**11*/] //This will probably be remade completely
 //const unlockLevelsBig = [1000000000]
 const levelBarTextures = [50, 55, 60, 65, 70, 80, 90, 100, 200]
 
@@ -152,7 +152,7 @@ const tokenUpgrades = [ //Name, base upgrade cost, cost scaling, total levels, e
     {name: "tokenUpgrade8", baseCost: 50, costScaling: 1, levels: 1, unlock: 22, reqs: 1, recList: [4], effect: "If (Bank >= 5), x(1 + ln(ticks)) Tokens"},
     {name: "tokenUpgrade9", baseCost: 25, costScaling: 2, levels: 4, unlock: 23, reqs: 1, recList: [5], effect: "+1x XP per level"},
     {name: "tokenUpgrade10", baseCost: 50, costScaling: 4, levels: 2, unlock: 24, reqs: 2, recList: [6, 7], effect: "+0.75x XPBoost, +0.1x Luck per level"},
-    {name: "tokenUpgrade11", baseCost: 1000000, costScaling: 1, levels: 1, unlock: 19, reqs: 0, recList: [0], effect: "You should look into researches"},
+    {name: "tokenUpgrade11", baseCost: 1000000, costScaling: 1, levels: 1, unlock: 19, reqs: 0, recList: [0], effect: "Maybe you're not supposed to buy this?"},
     {name: "tokenUpgrade12", baseCost: 3, costScaling: 1.5, levels: 5, unlock: 19, reqs: 1, recList: [11], effect: "Nerfs killing you? Here's +0.1x tokens per level"},
     {name: "tokenUpgrade13", baseCost: 1, costScaling: 1, levels: 100, unlock: 19, reqs: 1, recList: [11], effect: "+0.05x XP per level. And x2 if maxed"},
     {name: "tokenUpgrade14", baseCost: 10, costScaling: 2, levels: 5, unlock: 20, reqs: 1, recList: [11], effect: "+0.5x RP per level"},
