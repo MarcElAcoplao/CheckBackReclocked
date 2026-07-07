@@ -4,7 +4,7 @@ const replicantiButtons = [
 ]
 
 function replicantiButton(x) {
-    /*if (game.replicanti.buttonCooldowns[x] >= replicantiButtons[x].cooldown / game.replicanti.cooldown) {
+    if (game.replicanti.buttonCooldowns[x] >= replicantiButtons[x].cooldown / game.replicanti.cooldown) {
         let times = roundRNG (game.replicanti.buttonCooldowns[x] / (replicantiButtons[x].cooldown / game.replicanti.cooldown))
         game.replicanti.buttonCooldowns[x] = 0 //Default cooldown state
         let multi = calculateReplicantiGain(x)
@@ -15,7 +15,7 @@ function replicantiButton(x) {
         }
         if (compareBig(game.replicanti.amount, [1, 10**300])) {game.replicanti.amount = [1, 10**300]}
         game.player.buttonClicks += times
-    }*/
+    }
 }
 
 function calculateReplicantiGain(x) {
@@ -31,7 +31,7 @@ function calculateReplicantiExpo(x) {
 function calculateReplicantiStats() {
     let baseMulti = [1, 0]
     game.replicanti.multi = baseMulti
-    let baseExpo = [0, 0]
+    let baseExpo = 0
     game.replicanti.expo = baseExpo
     let baseCooldown = 1
     game.replicanti.cooldown = baseCooldown
@@ -40,6 +40,16 @@ setInterval(calculateReplicantiStats, 50)
 
 function calculateReplicantiBonuses() {
     let baseXP = [1, 0] //Base xp cooldowns
+    baseXP = addBig(baseXP, logBig(game.replicanti.amount))
     game.replicantiBonuses.xpMulti = baseXP
 }
 setInterval(calculateReplicantiBonuses, 50)
+
+function replicantiEffects() {
+    let result = ""
+    result += "Replicanti multi: x" + displayBig(game.replicanti.multi)
+    if (game.replicanti.cooldown != 1) {result += "<br>Cooldowns: /" + numberShort(game.replicanti.cooldown)}
+    if (game.replicanti.expo > 0) {result += "<br>Expo: ^(gain^" + numberShort(game.replicanti.expo) + ")"}
+    result += "<br><br>XP bonus: x" + displayBig(game.replicantiBonuses.xpMulti)
+    return result
+}

@@ -99,6 +99,7 @@ function displayTabContent() {
         if (currentTab == "[3,2]" && game.player.unlocks >= replicantiButtons[i].unlock) {document.getElementById(replicantiButtons[i].name).style.display = "block"}
         else {document.getElementById(replicantiButtons[i].name).style.display = "none"}
     }
+    if (currentTab == "[3,2]") {document.getElementById("petRarities").innerHTML = replicantiEffects()}
 
 }
 setInterval(displayTabContent, 50)

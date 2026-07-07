@@ -36,6 +36,7 @@ function calculateXPStats() {
     baseMulti = multiplyBig(baseMulti, game.tokenBonuses.xp) //Token upgrade 1, yea this is shitty will do it better later
     baseMulti = multiplyBig(baseMulti, game.dailyBonuses.xp)
     baseMulti = multiplyBig(baseMulti, game.researchBonuses.xpMulti)
+    //baseMulti = multiplyBig(baseMulti, game.replicantiBonuses.xpMulti)
     game.xp.multiplier = baseMulti
     let baseCooldown = 1 //xp cooldown divider
     if (!!pets[game.pets.equipped].xpCooldown) { baseCooldown *= pets[game.pets.equipped].xpCooldown }

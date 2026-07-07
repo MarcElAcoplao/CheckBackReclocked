@@ -135,7 +135,7 @@ function reset() {
         replicanti: {
             amount: [1, 0], //Big
             multi: [1, 0], //Big
-            expo: [1, 0], //Big
+            expo: 0, //Normal
             cooldown: 1, //Normal
             buttonCooldowns: [900, 1800], //List of normals 
         },
@@ -306,7 +306,7 @@ function updateStuffOnLoad() {
     }
     /*if (game.player.versionNumber == 5) {
         game.replicanti.amount = [1, 0]
-        game.versionNumber = 6
+        game.player.versionNumber = 6
     }*/
     changeTheme(game.player.currentTheme)
 }
@@ -396,7 +396,7 @@ function updateSmall() { //This part checks if buttons are available or not, add
             else {
                 document.getElementById(replicantiButtons[i].name).disabled = false
                 document.getElementById(replicantiButtons[i].name).innerHTML = "Gain x" + displayBig(calculateReplicantiGain(i)) + " Replicanti"
-                if (compareBig(game.replicanti.expo, [0, 0])) { document.getElementById(replicantiButtons[i].name).innerHTML += "<br>And ^" + displayBig(calculateReplicantiExpo(i)) + " Replicanti" }
+                if (game.replicanti.expo > 0) { document.getElementById(replicantiButtons[i].name).innerHTML += "<br>And ^" + displayBig(calculateReplicantiExpo(i)) + " Replicanti" }
             }
         }
     }
@@ -588,7 +588,7 @@ function updateLarge() {
     for (let i = 0; i < size; i++) { //Updates every pet cooldown based on the difference between current time and last time they have been updated.
         if (game.pets.buttonCooldowns[i] >= 0) { game.pets.buttonCooldowns[i] += ((Date.now() - game.player.timeOfLastUpdate) / (1000 / game.player.speed)) }
         if (game.pets.buttonCooldowns[i] < 0 || !game.pets.buttonCooldowns[i]) { game.pets.buttonCooldowns[i] = 0 }
-        if (!(game.research.upgrades[25] == 1 && game.player.unlocks >= petButtons[i].cooldown)) {
+        if (!(game.research.upgrades[25] == 1 && game.player.unlocks >= petButtons[i].unlock)) {
             game.pets.buttonCooldowns[i] = Math.min(game.pets.buttonCooldowns[i], petButtons[i].cooldown / game.pets.cooldown)
         }
     }
@@ -658,7 +658,7 @@ function numberShort(x) { //Abreviates a number into thousand, million, billion 
         else if (exponent >= 9) result = (xCeil / 10 ** 9).toFixed(1) + "&nbsp;B" //Billion (e9)
         else if (exponent >= 6) result = (xCeil / 10 ** 6).toFixed(1) + "&nbsp;M" //Million (e6)
         else if (exponent >= 3) result = (xCeil / 10 ** 3).toFixed(1) + "&nbsp;K" //Thousand (e3)
-        else if (x < 1 && x > -1) result = (x).toFixed(3) //Uses 3 decimal places for -1 < x < 1
+        else if (x < 1.1 && x > -1.1) result = (x).toFixed(3) //Uses 3 decimal places for -1 < x < 1
         else result = (x).toFixed(2) //2 Decimal places between 1 and 1k
         return result
     }
