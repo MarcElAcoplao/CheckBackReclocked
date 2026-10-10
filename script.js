@@ -30,6 +30,8 @@ function reset() {
             masteryPoints: 0, //Normal
             masteredPetsList: [0, 0, 0, 0], //List of normals
             masteredPets: 0, //Normal
+            abilities: [[0, 1], [0, 1]],
+            abilityAverage: 1,
         },
         xpBoost: {
             amount: [1, 0], //Big
@@ -59,6 +61,18 @@ function reset() {
             luck: 1, //Normal
             xpBEffect: [1, 0], //Big
             rpMulti: 1, //Normal
+            replicantiMulti: [1, 0], //Big
+        },
+        tickets: {
+            amount: 0, //Normal
+            multi: 0, //Normal
+            start: 1000000, //Normal
+            expo: 0.8, //Normal
+            upgrades: [0, 0, 0, 0, 0], //List of normals
+        },
+        ticketBonuses: {
+            tokens: 1, //Normal
+            xpMulti: [1, 0], //big
         },
         player: {
             highestLevel: [1, 0], //Big
@@ -76,8 +90,9 @@ function reset() {
             cratesOpened: 0, //Normal
             online: false, //If this is false, whenever it updates cooldowns it won't count for playtime
             crateEmoji: true, //Bool
-            versionNumber: 5, //Normal
+            versionNumber: 6, //Normal
             cratesComplete: 0, //Normal
+            fileExport: true, //Bool
         },
         daily: { //This is entirely remade
             days: 1, //Normal
@@ -131,6 +146,7 @@ function reset() {
             petCooldown: 1, //Normal
             xpBCooldown: 1, //Normal
             tokenMulti: 1, //Normal
+            replicantiMulti: [1, 0], //Big
         },
         replicanti: {
             amount: [1, 0], //Big
@@ -194,16 +210,68 @@ load()
 
 function exportGame() {
     save()
-    navigator.clipboard.writeText(btoa(JSON.stringify(game))).then(function () {
-        alert("Copied to clipboard!")
-    }, function () {
-        alert("Error copying to clipboard, try again...")
-    });
+    let data = btoa(JSON.stringify(game))
+    if (game.player.fileExport == true) {
+        let fileName = prompt("Input the desired file name here:")
+        if (!fileName) {
+            alert("Invalid name, try again")
+            return
+        }
+        const blob = new Blob([data], {
+            type: "text/plain",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = fileName; // file name
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+    else {
+        navigator.clipboard.writeText(data).then(function () {
+            alert("Copied to clipboard!")
+        }, function () {
+            alert("Error copying to clipboard, try again...")
+        });
+    }
 }
 
+const fileInput = document.getElementById("importFile")
+fileInput.addEventListener("change", handleFileSelection)
+
 function importGame() {
-    loadgame = JSON.parse(atob(prompt("Input your save here:")))
-    if (loadgame && loadgame != null && loadgame != "") {
+    let loadgame = "a"
+    if (game.player.fileExport == true) {
+        document.getElementById("importFile").click()
+    }
+    else {
+        loadgame = JSON.parse(atob(prompt("Input your save here:")))
+        actualImportGame(loadgame)
+    }
+}
+
+function handleFileSelection(event) {
+    let loadgame = "a"
+    const file = event.target.files[0]
+    if (!file) {
+        alert("No file selected. Please choose a file and try again")
+        return
+    }
+    const reader = new FileReader();
+    console.log(reader.result)
+    reader.onload = () => {
+        loadgame = JSON.parse(atob(reader.result))
+        actualImportGame(loadgame)
+    }
+    reader.onerror = () => {
+        alert("Error in reading file")
+        return
+    }
+    reader.readAsText(file)
+}
+
+function actualImportGame(loadgame) {
+    if (loadgame != null && loadgame != "" && loadgame != "a") {
         reset()
         loadGame(loadgame)
         updateStuffOnLoad()
@@ -220,7 +288,6 @@ function loadGame(loadgame) {
     let dataBackup = localStorage.getItem("checkBackReclockedSave"); //change to "checkBackRelockedSave" when release coming up
     try {
         let loadKeys = Object.keys(loadgame);
-        if (loadKeys.length > 1000) loadKeys = Object.keys(fixFile(loadgame));
         for (let i = 0; i < loadKeys.length; i++) {
             if (loadgame[loadKeys[i]] != "undefined") {
                 let thisKey = loadKeys[i];
@@ -236,6 +303,10 @@ function loadGame(loadgame) {
         if (dataBackup !== null) localStorage.setItem("checkBackReclockedSave", dataBackup); //change to "checkBackRelockedSave" when release coming up
         window.alert(`Save Data Issues!\n${err}`); //whatever you want to say here
     }
+}
+
+function changeFile() {
+    game.player.fileExport = !game.player.fileExport
 }
 
 function updateStuffOnLoad() {
@@ -256,12 +327,16 @@ function updateStuffOnLoad() {
     for (let i = 0; i < researches.length; i++) {
         if (!game.research.upgrades[i]) { game.research.upgrades[i] = 0 }
     }
-    if (!game.mining.oreCooldowns) { game.mining.oreCooldowns = [0] }
+    if (!game.tickets.upgrades) { game.tickets.upgrades = [0, 0] }
+    for (let i = 0; i < ticketUpgrades.length; i++) {
+        if (!game.tickets.upgrades[i]) { game.tickets.upgrades[i] = 0 }
+    }
+    /*if (!game.mining.oreCooldowns) { game.mining.oreCooldowns = [0] }
     if (!game.mining.oreInv) { game.mining.oreInv = [[0, 0], [0, 0]] }
     if (!game.mining.grid) { game.mining.grid = [[0, 0], [0, 0]] }
     for (let i = 0; i < game.mining.gridSize; i++) {
         if (!game.mining.grid[i]) { game.mining.grid[i] = [0, 0] }
-    }
+    }*/
     if (!game.pets.masteredPetsList) { game.pets.masteredPetsList = [0, 0, 0] }
     for (let i = 0; i < mastery.length; i++) {
         if (!game.pets.masteredPetsList[i]) { game.pets.masteredPetsList[i] = 0 }
@@ -304,10 +379,14 @@ function updateStuffOnLoad() {
         resetPetCooldowns()
         resetXPBoostCooldowns()
     }
-    /*if (game.player.versionNumber == 5) {
-        game.replicanti.amount = [1, 0]
+    if (game.player.versionNumber == 5) {
         game.player.versionNumber = 6
-    }*/
+        game.replicanti.amount = [1, 0]
+        game.replicanti.buttonCooldowns = [900, 1800, 3000]
+        game.pets.abilities = [[0, 1]]
+        game.tickets.amount = 0
+        game.player.fileExport = true
+    }
     changeTheme(game.player.currentTheme)
 }
 updateStuffOnLoad()
@@ -370,7 +449,7 @@ function updateSmall() { //This part checks if buttons are available or not, add
         else { document.getElementById("tokenButton0").disabled = true }
         document.getElementById("tokenButton0").innerHTML = "Tokens: " + numberShort(game.tokens.amount) + "<br>Ticks: " + numberShort(game.tokens.ticks) + "; Next gain: " + numberShort(game.tokens.gain) + "<br>Bank amount: " + numberShort(game.tokens.bankAmount) + " (Click to collect)<br>Average gain: " + numberShort(game.tokens.bankAmount / Math.max(1, game.tokens.ticks)) + "<br>Next auto tick: " + numberToTime((1200 - game.tokens.autoTicks) / 20)
         for (let i = 1; i < tokenUpgrades.length; i++) {
-            document.getElementById(tokenUpgrades[i].name).innerHTML = "Level " + wholeNumberShort(game.tokens.upgrades[i]) + "/" + wholeNumberShort(tokenUpgrades[i].levels) + ". Effect: " + tokenUpgrades[i].effect + "<br>Cost: " + showTokenCost(i)
+            document.getElementById(tokenUpgrades[i].name).innerHTML = "Level " + wholeNumberShort(game.tokens.upgrades[i]) + "/" + wholeNumberShort(tokenUpgrades[i].levels()) + ". Effect: " + tokenUpgrades[i].effect + "<br>Cost: " + showTokenCost(i)
             if (game.tokens.amount >= (tokenUpgrades[i].baseCost * (tokenUpgrades[i].costScaling ** game.tokens.upgrades[i]))) { document.getElementById(tokenUpgrades[i].name).disabled = false }
             else { document.getElementById(tokenUpgrades[i].name).disabled = true }
         }
@@ -398,6 +477,16 @@ function updateSmall() { //This part checks if buttons are available or not, add
                 document.getElementById(replicantiButtons[i].name).innerHTML = "Gain x" + displayBig(calculateReplicantiGain(i)) + " Replicanti"
                 if (game.replicanti.expo > 0) { document.getElementById(replicantiButtons[i].name).innerHTML += "<br>And ^" + displayBig(calculateReplicantiExpo(i)) + " Replicanti" }
             }
+        }
+    }
+    if (currentTab == JSON.stringify([3, 3])) {
+        if (game.tokens.amount >= game.tickets.start) { document.getElementById("ticketButton0").disabled = false }
+        else { document.getElementById("ticketButton0").disabled = true }
+        document.getElementById("ticketButton0").innerHTML = "Tokenstige: Resets tokens and token upgrades to gain tickets<br>Tickets: " + numberShort(game.tickets.amount) + "; Gain: " + numberShort(calculateTicketGain()) + "<br>Minimum needed: " + numberShort(game.tickets.start)
+        for (let i = 1; i < ticketUpgrades.length; i++) {
+            document.getElementById(ticketUpgrades[i].name).innerHTML = "Level " + wholeNumberShort(game.tickets.upgrades[i]) + "/" + wholeNumberShort(ticketUpgrades[i].levels()) + ". Effect: " + ticketUpgrades[i].effect + "<br>Cost: " + showTicketCost(i)
+            if (game.tickets.amount >= (ticketUpgrades[i].baseCost * (ticketUpgrades[i].costScaling ** game.tickets.upgrades[i]))) { document.getElementById(ticketUpgrades[i].name).disabled = false }
+            else { document.getElementById(ticketUpgrades[i].name).disabled = true }
         }
     }
     let mainFlicker = false
@@ -469,6 +558,13 @@ function updateSmall() { //This part checks if buttons are available or not, add
     else {
         document.getElementById("MasteryTab").classList.remove("flickering")
     }
+    if (ReplicantiTab()) {
+        document.getElementById("ReplicantiTab").classList.add("flickering")
+        prestigeFlicker = true
+    }
+    else {
+        document.getElementById("ReplicantiTab").classList.remove("flickering")
+    }
     if (prestigeFlicker == true) {
         document.getElementById("PrestigeTab").classList.add("flickering")
     }
@@ -487,6 +583,7 @@ function updateSmall() { //This part checks if buttons are available or not, add
     } //If the xp you have is higher than whatever xp is needed for cap, then your xp gets set to the corresponding xp to the cap
     game.xp.level = XPToLevel([Math.max(game.xp.amount[0], 0), game.xp.amount[1]])
     game.xp.pseudoLevel = XPToLevel(addBig(game.xp.amount, game.xp.lostXP))
+    let percent = 0
     if (compareBig(game.xp.level, game.player.highestLevel)) { game.player.highestLevel = game.xp.level } //If your current level is set to something higher than your recorded highest level, your highest level gets set to that level
     if (game.player.unlocks < unlockLevelsSmall.length) { document.getElementById("nextUnlockLevel").innerHTML = "You will unlock something new at level " + wholeNumberShort(unlockLevelsSmall[game.player.unlocks]) } //If player unlocks are still "inside" the small level unlocks, it displays that
     else { document.getElementById("nextUnlockLevel").innerHTML = "All unlocks achieved. Check back later for more content" }
@@ -513,15 +610,16 @@ function updateSmall() { //This part checks if buttons are available or not, add
             document.getElementById("XPBarBack").style.width = "0%"
         }
         else {
-            document.getElementById("XPBarText").innerHTML = "Data: " + numberShort(game.research.data) + "/" + numberShort(researches[game.research.active].data)
-            document.getElementById("XPBarBack").style.width = game.research.data / researches[game.research.active].data * 100 + "%"
+            percent = game.research.data / researches[game.research.active].data * 100
+            document.getElementById("XPBarText").innerHTML = "Data: " + numberShort(game.research.data) + "/" + numberShort(researches[game.research.active].data) + " (" + numberShort(percent) + "%)"
+            document.getElementById("XPBarBack").style.width = percent + "%"
         }
         bar.style.setProperty("--color1", "rgb(7, 228, 248)");
         bar.style.setProperty("--color2", "rgb(113, 97, 237)");
     }
     else if (JSON.stringify(game.player.currentTab) == JSON.stringify([3, 2])) {
         document.getElementById("level").innerHTML = "Replicanti " + displayBig(game.replicanti.amount)
-        let percent = convertToNormal(logBig(logBig(addBig(game.replicanti.amount, [9, 0])))) / 3
+        percent = convertToNormal(logBig(logBig(addBig(game.replicanti.amount, [9, 0])))) / 3
         document.getElementById("XPBarBack").style.width = percent + "%"
         document.getElementById("XPBarText").innerHTML = "Progress to limit: " + numberShort(percent) + "% (1e1e300)"
         bar.style.setProperty("--color1", "rgb(248, 7, 7)");
@@ -536,23 +634,25 @@ function updateSmall() { //This part checks if buttons are available or not, add
         if (compareBig([5, 2], game.xp.level)) { //Single "XP to next level" in xp bar, up to level 500
             XPToNextLevel = substractBig(levelToXP(addBig(game.xp.level, 1)), levelToXP(game.xp.level)) //XP to next level = levelToXP(level + 1) - levelToXP(level) //substractBig(levelToXP(addBig(game.xp.level, 1)), levelToXP(game.xp.level))
             ProgressToNextLevel = substractBig(game.xp.amount, levelToXP(game.xp.level))
-            document.getElementById("XPBarText").innerHTML = "XP to next level: " + numberShort(convertToNormal(ProgressToNextLevel)) + "/" + numberShort(convertToNormal(XPToNextLevel))
-            document.getElementById("XPBarBack").style.width = (convertToNormal(ProgressToNextLevel) / convertToNormal(XPToNextLevel) * 100) + "%"
+            percent = (convertToNormal(ProgressToNextLevel) / convertToNormal(XPToNextLevel) * 100)
+            document.getElementById("XPBarText").innerHTML = "XP to next level: " + numberShort(convertToNormal(ProgressToNextLevel)) + "/" + numberShort(convertToNormal(XPToNextLevel)) + " (" + numberShort(percent) + "%)"
+            document.getElementById("XPBarBack").style.width = percent + "%"
         }
         else if (game.player.unlocks < unlockLevelsSmall.length) {
             XPToNextUnlock = substractBig(levelToXP(unlockLevelsSmall[game.player.unlocks]), levelToXP(unlockLevelsSmall[game.player.unlocks - 1])) //XP to next level = levelToXP(level + 1) - levelToXP(level) //substractBig(levelToXP(addBig(game.xp.level, 1)), levelToXP(game.xp.level))
             ProgressToNextUnlock = substractBig(game.xp.amount, levelToXP(unlockLevelsSmall[game.player.unlocks - 1]))
-            document.getElementById("XPBarText").innerHTML = "XP to next unlock: " + numberShort(convertToNormal(ProgressToNextUnlock)) + "/" + numberShort(convertToNormal(XPToNextUnlock))
-            document.getElementById("XPBarBack").style.width = (convertToNormal(ProgressToNextUnlock) / convertToNormal(XPToNextUnlock) * 100) + "%"
+            percent = (convertToNormal(ProgressToNextUnlock) / convertToNormal(XPToNextUnlock) * 100)
+            document.getElementById("XPBarText").innerHTML = "XP to next unlock: " + numberShort(convertToNormal(ProgressToNextUnlock)) + "/" + numberShort(convertToNormal(XPToNextUnlock)) + " (" + numberShort(percent) + "%)"
+            document.getElementById("XPBarBack").style.width = percent + "%"
         } //xp to next unlock
         else { //xp to next x10
             levelExpo = game.xp.pseudoLevel[1]
             XPToNextOoM = substractBig(levelToXP([1, levelExpo + 1]), levelToXP([1, levelExpo]))
             if (JSON.stringify(game.xp.level) == JSON.stringify(game.xp.levelCap)) { ProgressToNextOoM = substractBig(levelToXP(game.xp.pseudoLevel), levelToXP([1, levelExpo])) }
             else { ProgressToNextOoM = substractBig(game.xp.amount, levelToXP([1, levelExpo])) }
-
-            document.getElementById("XPBarText").innerHTML = "XP to next x10 levels: " + displayBig(ProgressToNextOoM) + "/" + displayBig(XPToNextOoM)
-            document.getElementById("XPBarBack").style.width = (convertToNormal(divideBig(ProgressToNextOoM, XPToNextOoM)) * 100) + "%"
+            percent = (convertToNormal(divideBig(ProgressToNextOoM, XPToNextOoM)) * 100)
+            document.getElementById("XPBarText").innerHTML = "XP to next x10 levels: " + displayBig(ProgressToNextOoM) + "/" + displayBig(XPToNextOoM) + "(" + numberShort(percent) + "%)"
+            document.getElementById("XPBarBack").style.width = percent + "%"
         }
         bar.style.setProperty("--color1", "rgb(0, 187, 0)");
         bar.style.setProperty("--color2", "rgb(176, 251, 176)");
@@ -638,11 +738,14 @@ function numberToTime(x) { //Converts a number from seconds (example: 346) into 
     if (typeof x === 'number' && !isNaN(x)) { //This first line makes sure that you've entered a number, that is not NaN
         xCeil = Math.ceil(x)
         result = ""
-        if (xCeil >= 31536000) result += Math.floor(xCeil / 31536000) + "y "
+        if (xCeil >= 31536000) {
+            if (xCeil / 31536000 >= 10000) { result += wholeNumberShort(xCeil / 31536000) + "y " }
+            else { result += Math.floor(xCeil / 31536000) + "y "}
+        }
         if (Math.floor(xCeil / 86400) % 365 != 0) result += Math.floor((xCeil / 86400) % 365) + "d "
         if (Math.floor(xCeil / 3600) % 24 != 0) result += (Math.floor(xCeil / 3600) % 24) + "h "
         if (Math.floor(xCeil / 60) % 60 != 0) result += (Math.floor(xCeil / 60) % 60) + "m "
-        if (xCeil % 60 != 0) result += Math.floor(xCeil % 60) + "s "
+        if (xCeil % 60 != 0) result += Math.floor(xCeil % 60) + "s"
         if (xCeil == 0) result = "0s"
         return result
     }
@@ -797,7 +900,7 @@ document.addEventListener("animationstart", (event) => {
 
 function unlockToLevel(x) {
     let result = 0
-    if (x < unlockLevelsSmall.length) {
+    if (x <= unlockLevelsSmall.length) {
         result = convertToBig(unlockLevelsSmall[x - 1])
     }
     return result
@@ -821,5 +924,6 @@ function collectAll() {
     if (currentTab == JSON.stringify([2, 3])) { collectAllXPBoost() }
     if (currentTab == JSON.stringify([2, 4])) { buyAllTokens() }
     if (currentTab == JSON.stringify([3, 1]) && game.prestige.reset == true) { collectAllRP() }
+    if (currentTab == JSON.stringify([3, 2])) {collectAllReplicanti()}
     //call a different function based on tab, like a collect all xp function for xp
 }

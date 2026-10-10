@@ -2,6 +2,13 @@
 <html>
 
 <head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5MZ2F8ZH');</script>
+    <!-- End Google Tag Manager -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <meta content="Check Back Reclocked" property="og:title" />
@@ -17,6 +24,10 @@
 </head>
 
 <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5MZ2F8ZH"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <div id="topBar">
         <div id="levelBar">
             <p id="levelBarText"> <span id="level">Level 1</span></p>
@@ -44,6 +55,7 @@
                 <button class="tabButton" id="ResearchTab" style="display: none" onclick="subtab([3, 1])"> · Researches</button>
                 <button class="tabButton" id="MasteryTab" style="display: none" onclick="openCloseMasteryTab()"> · Mastery</button>
                 <button class="tabButton" id="ReplicantiTab" style="display: none" onclick="subtab([3, 2])"> · Replicanti</button>
+                <button class="tabButton" id="TicketsTab" style="display: none" onclick="subtab([3, 3])"> · Tokenstige</button>
         </div>
 
         <div id="buttonsContainer">
@@ -99,6 +111,17 @@
             <button class="button" id="tokenUpgrade20" style="display: none" onclick="buyTokenUpgrade(20)">Upgrade 20</button>
             <button class="button" id="tokenUpgrade21" style="display: none" onclick="buyTokenUpgrade(21)">Upgrade 21</button>
             <button class="button" id="tokenUpgrade22" style="display: none" onclick="buyTokenUpgrade(22)">Upgrade 22</button>
+            <button class="button" id="tokenUpgrade23" style="display: none" onclick="buyTokenUpgrade(23)">Upgrade 23</button>
+            <button class="button" id="tokenUpgrade24" style="display: none" onclick="buyTokenUpgrade(24)">Upgrade 24</button>
+            <button class="button" id="tokenUpgrade25" style="display: none" onclick="buyTokenUpgrade(25)">Upgrade 25</button>
+            <button class="button" id="tokenUpgrade26" style="display: none" onclick="buyTokenUpgrade(26)">Upgrade 26</button>
+            <button class="button" id="tokenUpgrade27" style="display: none" onclick="buyTokenUpgrade(27)">Upgrade 27</button>
+            <button class="button" id="tokenUpgrade28" style="display: none" onclick="buyTokenUpgrade(28)">Upgrade 28</button>
+            <button class="button" id="tokenUpgrade29" style="display: none" onclick="buyTokenUpgrade(29)">Upgrade 29</button>
+            <button class="button" id="tokenUpgrade30" style="display: none" onclick="buyTokenUpgrade(30)">Upgrade 30</button>
+            <button class="button" id="tokenUpgrade31" style="display: none" onclick="buyTokenUpgrade(31)">Upgrade 31</button>
+            <button class="button" id="tokenUpgrade32" style="display: none" onclick="buyTokenUpgrade(32)">Upgrade 32</button>
+            <button class="button" id="tokenUpgrade33" style="display: none" onclick="buyTokenUpgrade(33)">Upgrade 33</button>
 
             <button class="button" id="prestigeButton" style="display: none" onclick="prestigeReset()">Resets all your progress and applies harsh nerfs, but unlocks a new feature. Required to progress</button>
             <button class="button" id="ResearchMenu" style="display: none" onclick="openCloseResearchTab()">View researches</button>
@@ -115,9 +138,21 @@
             <button class="button" id="RPbutton10" style="display: none" onclick="rpButton(10)">Gain 11 RP</button>
             <button class="button" id="RPbutton11" style="display: none" onclick="rpButton(11)">Gain 12 RP</button>
             <button class="button" id="RPbutton12" style="display: none" onclick="rpButton(12)">Gain 13 RP</button>
+            <button class="button" id="RPbutton13" style="display: none" onclick="rpButton(13)">Gain 14 RP</button>
 
             <button class="button" id="replicantiButton0" style="display: none" onclick="replicantiButton(0)">Gain x2 Replicanti</button>
             <button class="button" id="replicantiButton1" style="display: none" onclick="replicantiButton(1)">Gain x5 Replicanti</button>
+            <button class="button" id="replicantiButton2" style="display: none" onclick="replicantiButton(2)">Gain x12 Replicanti</button>
+            <button class="button" id="replicantiButton3" style="display: none" onclick="replicantiButton(3)">Gain x30 Replicanti</button>
+            <button class="button" id="replicantiButton4" style="display: none" onclick="replicantiButton(4)">Gain x100 Replicanti</button>
+
+            <button class="button" id="ticketButton0" style="display: none" onclick="ticketReset()">Tokenstige</button>
+            <button class="button" id="ticketUpgrade1" style="display: none" onclick="buyTicketUpgrade(1)">Upgrade 1</button>
+            <button class="button" id="ticketUpgrade2" style="display: none" onclick="buyTicketUpgrade(2)">Upgrade 2</button>
+            <button class="button" id="ticketUpgrade3" style="display: none" onclick="buyTicketUpgrade(3)">Upgrade 3</button>
+            <button class="button" id="ticketUpgrade4" style="display: none" onclick="buyTicketUpgrade(4)">Upgrade 4</button>
+            <button class="button" id="ticketUpgrade5" style="display: none" onclick="buyTicketUpgrade(5)">Upgrade 5</button>
+            
         </div>
 
         <div id="infosContainer">
@@ -149,12 +184,13 @@
         <div id="rightFooterColumn">
             <p id="versionText">Check Back Reclocked <a
                     href="https://github.com/MarcElAcoplao/CheckBackReclocked/blob/main/changelog.txt"
-                    target="_blank">v0.2</a> (Creator: MarcElAcoplao, <a href="https://discord.gg/YaSk8e2wFt"
+                    target="_blank">v0.3</a> (Creator: MarcElAcoplao, <a href="https://discord.gg/YaSk8e2wFt"
                     target="_blank">Discord</a>)
             </p>
             <div id="settingsContainer">
+                <button class="settingsButton" id="setting9" onclick="changeFile()">File exports: <span id="settingEffect9">Yes</span></button>
                 <button class="settingsButton" id="setting8" onclick="collectAll()">Collect All</button>
-                <button class="settingsButton" id="setting7" style="display: none" onclick="changeEmojis()">Crate emojis: On</button>
+                <button class="settingsButton" id="setting7" style="display: none" onclick="changeEmojis()">Crate emojis: <span id="settingEffect7">Yes</span></button>
                 <button class="settingsButton" id="setting6" onclick="help()">Help</button>
                 <button class="settingsButton" id="setting5" onclick="openCloseStatsTab()">Display stats</button>
                 <button class="settingsButton" id="setting4" onclick="exportGame()">Export</button>
@@ -232,6 +268,8 @@
         <div id="masteryInfo"></div>
     </div>
 
+    <input type="file" id="importFile" display ="none" accept=".txt" hidden>
+    
     <script src="constants.js"></script>
     <script src="big.js"></script>
     <script src="themes.js"></script>
@@ -244,6 +282,7 @@
     <script src="daily.js"></script>
     <script src="mastery.js"></script>
     <script src="replicanti.js"></script>
+    <script src="tycoon.js"></script>
     <script src="script.js"></script>
     <script src="stats.js"></script>
     <script defer>setAutoSave()</script>

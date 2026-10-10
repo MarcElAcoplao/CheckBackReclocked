@@ -12,6 +12,7 @@ const researchButtons = [
     { name: "RPbutton10", powerGain: 640, cooldown: 86400, unlock: 21 }, //Level 5k
     { name: "RPbutton11", powerGain: 1250, cooldown: 176400, unlock: 27 }, //Level 1m
     { name: "RPbutton12", powerGain: 2500, cooldown: 360000, unlock: 30 }, //Level 50m
+    { name: "RPbutton13", powerGain: 5000, cooldown: 604800, unlock: 36 }, //Level 100b
 ]
 
 function prestigeReset() {
@@ -57,9 +58,12 @@ function calculateRPstats() {
     if (!!pets[game.pets.equipped].rpMulti) baseMulti *= pets[game.pets.equipped].rpMulti
     baseMulti *= game.tokenBonuses.rpMulti
     baseMulti *= game.dailyBonuses.rp
+    baseMulti *= game.ticketBonuses.rpMulti
+    baseMulti *= game.replicantiBonuses.rpMulti
     game.research.multi = baseMulti
     let baseCooldown = 1
     baseCooldown *= game.researchBonuses.rpCooldown
+    baseCooldown *= game.tokenBonuses.rpCooldown
     game.research.cooldown = baseCooldown
 }
 setInterval(calculateRPstats, 50)
@@ -174,11 +178,13 @@ function calculateResearchBonuses() {
     if (game.research.upgrades[12] >= 1) { baseXPMulti = multiplyBig(baseXPMulti, [4, 0]) }
     if (game.research.upgrades[18] >= 1) { baseXPMulti = multiplyBig(baseXPMulti, [5, 0]) }
     if (game.research.upgrades[27] >= 1) { baseXPMulti = multiplyBig(baseXPMulti, 2 ** game.pets.masteredPets) }
+    if (game.research.upgrades[38] >= 1) { baseXPMulti = multiplyBig(baseXPMulti, [5, 0]) }
     game.researchBonuses.xpMulti = baseXPMulti
     let baseXPExpo = [1, 0] //XP Expo from research
     if (game.research.upgrades[5] >= 1) { baseXPExpo = multiplyBig(baseXPExpo, [1.1, 0]) }
     if (game.research.upgrades[9] >= 1) { baseXPExpo = multiplyBig(baseXPExpo, [1.1, 0]) }
     if (game.research.upgrades[22] >= 1) { baseXPExpo = multiplyBig(baseXPExpo, [1.1, 0]) }
+    if (game.research.upgrades[37] >= 1) { baseXPExpo = multiplyBig(baseXPExpo, [1.2, 0]) }
     game.researchBonuses.xpExpo = baseXPExpo
     let baseLuck = 1 //Crate luck from research
     if (game.research.upgrades[8] >= 1) { baseLuck *= 1.2 }
@@ -187,22 +193,26 @@ function calculateResearchBonuses() {
     if (game.research.upgrades[18] >= 1) { baseLuck *= 1.3 }
     if (game.research.upgrades[26] >= 1) { baseLuck *= 1.5 }
     if (game.research.upgrades[32] >= 1 && game.pets.masteredPetsList[10] >= 1) { baseLuck *= 3 }
+    if (game.research.upgrades[41] >= 1) { baseLuck *= 7.77 }
     game.researchBonuses.crateLuck = baseLuck
     let baseRPMulti = 1 //RP Multipliers from research
     if (game.research.upgrades[2] >= 1) { baseRPMulti *= 1.1 }
     if (game.research.upgrades[6] >= 1) { baseRPMulti *= 1.3 }
     if (game.research.upgrades[15] >= 1) { baseRPMulti *= 2 }
+    if (game.research.upgrades[38] >= 1) { baseRPMulti *= 5 }
     game.researchBonuses.rpMulti = baseRPMulti
     let baseXPCooldown = 1 //XP Cooldowns from research
     if (game.research.upgrades[4] >= 1) { baseXPCooldown *= 1.2 }
     if (game.research.upgrades[19] >= 1 && game.pets.amount[17] >= 1) { baseXPCooldown *= 1.4 }
     if (game.research.upgrades[26] >= 1) { baseXPCooldown *= 1.3 }
     if (game.research.upgrades[33] >= 1) { baseXPCooldown *= 1.4 }
+    if (game.research.upgrades[43] >= 1) { baseXPCooldown *= 2 }
     game.researchBonuses.xpCooldown = baseXPCooldown
     let baseXPBMulti = [1, 0] //XPBoost Multipliers from research
     if (game.research.upgrades[14] >= 1) { baseXPBMulti = multiplyBig(baseXPBMulti, [2, 0]) }
     if (game.research.upgrades[18] >= 1) { baseXPBMulti = multiplyBig(baseXPBMulti, [2, 0]) }
     if (game.research.upgrades[29] >= 1) { baseXPBMulti = multiplyBig(baseXPBMulti, [3, 0]) }
+    if (game.research.upgrades[38] >= 1) { baseXPBMulti = multiplyBig(baseXPBMulti, [5, 0]) }
     game.researchBonuses.xpBMulti = baseXPBMulti
     let baseXPBEffect = [1, 0] //XPBoost effect expo from research
     if (game.research.upgrades[16] >= 1) { baseXPBEffect = multiplyBig(baseXPBEffect, [1.2, 0]) }
@@ -212,22 +222,40 @@ function calculateResearchBonuses() {
     if (game.research.upgrades[17] >= 1) { basePetCooldown *= 1.2 }
     if (game.research.upgrades[19] >= 1 && game.pets.amount[17] >= 1) { basePetCooldown *= 1.4 }
     if (game.research.upgrades[33] >= 1) { basePetCooldown *= 1.4 }
+    if (game.research.upgrades[43] >= 1) { basePetCooldown *= 2 }
     game.researchBonuses.petCooldown = basePetCooldown
     let baseXPBCooldown = 1 //XPBoost Cooldowns from research
     if (game.research.upgrades[17] >= 1) { baseXPBCooldown *= 1.2 }
     if (game.research.upgrades[19] >= 1 && game.pets.amount[17] >= 1) { baseXPBCooldown *= 1.4 }
     if (game.research.upgrades[26] >= 1) { baseXPBCooldown *= 1.3 }
     if (game.research.upgrades[33] >= 1) { baseXPBCooldown *= 1.4 }
+    if (game.research.upgrades[43] >= 1) { baseXPBCooldown *= 2 }
     game.researchBonuses.xpBCooldown = baseXPBCooldown
     let baseTokenMulti = 1 //Token Multipliers from research
     if (game.research.upgrades[20] >= 1) { baseTokenMulti *= 1.5 }
     if (game.research.upgrades[23] >= 1) { baseTokenMulti *= 1.5 }
     if (game.research.upgrades[28] >= 1) { baseTokenMulti *= 2 }
+    if (game.research.upgrades[36] >= 1) { baseTokenMulti *= 1 + 0.1 * countResearches()}
+    if (game.research.upgrades[40] >= 1) { baseTokenMulti *= 2 }
+    if (game.research.upgrades[42] >= 1) { baseTokenMulti *= 3 }
     game.researchBonuses.tokenMulti = baseTokenMulti
     let baseRPCooldown = 1 //RP Cooldowns from research
     if (game.research.upgrades[19] >= 1 && game.pets.amount[17] >= 1) { baseRPCooldown *= 1.4 }
     if (game.research.upgrades[33] >= 1) { baseRPCooldown *= 1.4 }
+    if (game.research.upgrades[43] >= 1) { baseRPCooldown *= 2 }
     game.researchBonuses.rpCooldown = baseRPCooldown
+    let baseReplicantiMulti = [1, 0] //Replicanti multi from research
+    if (game.research.upgrades[35] >= 1) {baseReplicantiMulti = multiplyBig(baseReplicantiMulti, [2, 0])}
+    if (game.research.upgrades[39] >= 1) {baseReplicantiMulti = multiplyBig(baseReplicantiMulti, [4, 0])}
+    if (game.research.upgrades[44] >= 1) {baseReplicantiMulti = multiplyBig(baseReplicantiMulti, [1.3, 1])}
+    game.researchBonuses.replicantiMulti = baseReplicantiMulti
+    let baseReplicantiCooldown = 1 //Replicanti cooldown from research
+    if (game.research.upgrades[39] >= 1) {baseReplicantiCooldown *= 1.5}
+    if (game.research.upgrades[43] >= 1) {baseReplicantiCooldown *= 2}
+    game.researchBonuses.replicantiCooldown = baseReplicantiCooldown
+    let baseTicketMulti = 1 //Ticket multi from research
+    if (game.research.upgrades[42] >= 1) { baseTicketMulti *= 2 }
+    game.researchBonuses.ticketMulti = baseTicketMulti
 }
 setInterval(calculateResearchBonuses, 50)
 

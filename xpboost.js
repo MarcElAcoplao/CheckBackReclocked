@@ -28,9 +28,11 @@ function calculateXPBStats() {
     baseMulti = multiplyBig(baseMulti, game.tokenBonuses.xpBoost)
     baseMulti = multiplyBig(baseMulti, game.dailyBonuses.xpBoost)
     baseMulti = multiplyBig(baseMulti, game.researchBonuses.xpBMulti)
+    baseMulti = multiplyBig(baseMulti, game.ticketBonuses.xpBoostMulti)
     game.xpBoost.multiplier = baseMulti
     let baseCooldown = 1 //Calculates the cooldown divider, nothing about it for now
     baseCooldown *= game.researchBonuses.xpBCooldown
+    baseCooldown *= game.tokenBonuses.xpBCooldown
     game.xpBoost.cooldown = baseCooldown
     let baseEffectExpo = [1, 0]
     if (game.prestige.reset == true) { baseEffectExpo = multiplyBig(baseEffectExpo, game.prestige.xpBoostNerf) }

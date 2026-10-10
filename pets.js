@@ -1,10 +1,10 @@
 const petButtons = [ //The stats of every single pet button, also they are found on tab 2.2
-    { name: "petButton0", id: 0, cooldown: 600, unlock: 5, crateName: "basic", emoji: "💠" }, //Level 8
-    { name: "petButton1", id: 1, cooldown: 1200, unlock: 6, crateName: "nature", emoji: "🦎" }, //Level 12
-    { name: "petButton2", id: 2, cooldown: 3000, unlock: 9, crateName: "earth", emoji: "🦂" }, //Level 40
-    { name: "petButton3", id: 3, cooldown: 7200, unlock: 14, crateName: "fire", emoji: "🔥" }, //Level 200
-    { name: "petButton4", id: 4, cooldown: 15000, unlock: 21, crateName: "skeleton", emoji: "💀" }, //Level 5000
-    { name: "petButton5", id: 5, cooldown: 43200, unlock: 31, crateName: "ghost", emoji: "👻" }, //Level 100m
+    { name: "petButton0", id: 0, cooldown: 600, unlock: 5, crateName: "basic", emoji: "💠", odds: () => basicUnboxChances }, //Level 8
+    { name: "petButton1", id: 1, cooldown: 1200, unlock: 6, crateName: "nature", emoji: "🦎", odds: () => natureUnboxChances }, //Level 12
+    { name: "petButton2", id: 2, cooldown: 3000, unlock: 9, crateName: "earth", emoji: "🦂", odds: () => earthUnboxChances }, //Level 40
+    { name: "petButton3", id: 3, cooldown: 7200, unlock: 14, crateName: "fire", emoji: "🔥", odds: () => fireUnboxChances }, //Level 200
+    { name: "petButton4", id: 4, cooldown: 15000, unlock: 21, crateName: "skeleton", emoji: "💀", odds: () => skeletonUnboxChances }, //Level 5000
+    { name: "petButton5", id: 5, cooldown: 43200, unlock: 31, crateName: "ghost", emoji: "👻", odds: () => ghostUnboxChances }, //Level 100m
 ]
 
 const petBorders = [
@@ -15,6 +15,10 @@ const petBorders = [
     { upto: 34, color: "bbb" }, //27-34, Skeleton
     { upto: 42, color: "282" }, //35-42, Ghost
     { upto: 999, color: "fff" },
+]
+
+const abilities = [ //reference: () => variable
+    { oddsBase: 0.05, bonusBase: 10, reference: () => game.tokens.upgrades[22] },
 ]
 
 function openClosePetsTab() {
@@ -94,51 +98,42 @@ function setSelectedPet(x) {
     game.pets.equipped = x
 }
 
-function unboxPet(x) { //Can run up to idk how many, will have to test
+function unboxPet(x) { //Can run up to about a million flawlessly, but is capped at 1k, extra applies as bonus luck
     if (game.pets.buttonCooldowns[x] >= petButtons[x].cooldown / game.pets.cooldown) {
         let petsList = 0
-        let rng = 1
         let rolls = roundRNG(game.pets.buttonCooldowns[x] / (petButtons[x].cooldown / game.pets.cooldown))
         let unboxPopup = false
-        let luck = game.pets.luck
+        let baseLuck = game.pets.luck
+        let luck = 1
         if (rolls > 1000) {
-            luck *= rolls / 1000
+            baseLuck *= rolls / 1000
             rolls = 1000
         }
-        if (Math.random() <= 0.05 * game.tokens.upgrades[22]) {
-            luck *= 10
-        }
         game.pets.buttonCooldowns[x] = 0
-        if (x == 0) { petsList = basicUnboxChances }
-        if (x == 1) { petsList = natureUnboxChances }
-        if (x == 2) { petsList = earthUnboxChances }
-        if (x == 3) { petsList = fireUnboxChances }
-        if (x == 4) { petsList = skeletonUnboxChances }
-        if (x == 5) { petsList = ghostUnboxChances }
-        for (let i = 0; i < petsList.length; i++) {
-            let odds = petsList[i][1] * luck //To add luck factor in here, and also some sort of repeated rolls thing
-            let minimum = Math.floor(odds)
-            let amount = 0
-            for (let j = 0; j < rolls; j++) {
+        petsList = petButtons[x].odds()
+        for (let j = 0; j < rolls; j++) {
+            luck = baseLuck * rollAbilities()
+            for (let i = 0; i < petsList.length; i++) {
+                let amount = 0
+                let odds = petsList[i][1] * luck //To add luck factor in here, and also some sort of repeated rolls thing
+                let minimum = Math.floor(odds)
                 amount += minimum
                 let roll = Math.random()
                 if (roll <= odds % 1) {
                     amount++
-                    rng *= (1 / (odds % 1))
                 }
-            }
-            if (amount >= 1) {
-                let petChosen = petsList[i][0]
-                if (!game.pets.amount[petChosen]) { game.pets.amount[petChosen] = amount }
-                else { game.pets.amount[petChosen] += amount }
-                if (game.pets.amount[petChosen] >= 1 && game.pets.individualDiscovered[petChosen] == 0) { game.pets.individualDiscovered[petChosen] = 1 }
-                latestDrops(petChosen, amount)
-                if (pets[petChosen].power > pets[game.pets.equipped].power) { unboxPopup = true }
-                if (game.pets.masteredPetsList[petChosen] >= 1) { game.pets.masteryPoints += calculateMasteryGain(petChosen, amount) }
+                if (amount >= 1) {
+                    let petChosen = petsList[i][0]
+                    if (!game.pets.amount[petChosen]) { game.pets.amount[petChosen] = amount }
+                    else { game.pets.amount[petChosen] += amount }
+                    if (game.pets.amount[petChosen] >= 1 && game.pets.individualDiscovered[petChosen] == 0) { game.pets.individualDiscovered[petChosen] = 1 }
+                    latestDrops(petChosen, amount)
+                    if (pets[petChosen].power > pets[game.pets.equipped].power) { unboxPopup = true }
+                    if (game.pets.masteredPetsList[petChosen] >= 1) { game.pets.masteryPoints += calculateMasteryGain(petChosen, amount) }
+                }
             }
         }
         game.player.cratesOpened += rolls
-        game.pets.rollRNG = rng
         if (game.dailyBonuses.luckCharges >= 1) { game.dailyBonuses.luckCharges -= 1 }
         if (game.research.upgrades[25] == 0 && JSON.stringify(game.pets.unboxString) != JSON.stringify([[0, 0]])) { openCloseUnboxTab() }
         else {
@@ -150,35 +145,13 @@ function unboxPet(x) { //Can run up to idk how many, will have to test
 function displayPetRarities(x) {
     if (x == -1) { document.getElementById("petRarities").innerHTML = "" }
     else {
-        let petsList = 0
-        if (x == 0) {
-            petsList = basicUnboxChances
-            document.getElementById("petRarities").innerHTML = "<img src='img/crateBasic.png' style='width:6vh'><br><b>Rarities for this crate:</b><br>"
-        }
-        if (x == 1) {
-            petsList = natureUnboxChances
-            document.getElementById("petRarities").innerHTML = "<img src='img/crateNature.png' style='width:6vh'><br><b>Rarities for this crate:</b><br>"
-        }
-        if (x == 2) {
-            petsList = earthUnboxChances
-            document.getElementById("petRarities").innerHTML = "<img src='img/crateEarth.png' style='width:6vh'><br><b>Rarities for this crate:</b><br>"
-        }
-        if (x == 3) {
-            petsList = fireUnboxChances
-            document.getElementById("petRarities").innerHTML = "<img src='img/crateFire.png' style='width:6vh'><br><b>Rarities for this crate:</b><br>"
-        }
-        if (x == 4) {
-            petsList = skeletonUnboxChances
-            document.getElementById("petRarities").innerHTML = "<img src='img/crateSkeleton.png' style='width:6vh'><br><b>Rarities for this crate:</b><br>"
-        }
-        if (x == 5) {
-            petsList = ghostUnboxChances
-            document.getElementById("petRarities").innerHTML = "<img src='img/crateGhost.png' style='width:6vh'><br><b>Rarities for this crate:</b><br>"
-        }
+        let petsList = petButtons[x].odds()
+        document.getElementById("petRarities").innerHTML = "<img src='img/crate_" + petButtons[x].crateName + ".png' style='width:6vh'><br><b>Rarities for this crate:</b><br>"
         for (let i = 0; i < petsList.length; i++) {
             let odds = petsList[i][1] * game.pets.luck
             if (odds > 1) { document.getElementById("petRarities").innerHTML += pets[petsList[i][0]].name + ": " + Math.floor(odds) + " +" + ((odds % 1) * 100).toFixed(2) + "%<br>" }
-            else { document.getElementById("petRarities").innerHTML += pets[petsList[i][0]].name + ": " + (odds * 100).toFixed(2) + "%<br>" }
+            else if (odds >= 0.001) { document.getElementById("petRarities").innerHTML += pets[petsList[i][0]].name + ": " + (odds * 100).toFixed(2) + "%<br>" }
+            else { document.getElementById("petRarities").innerHTML += pets[petsList[i][0]].name + ": 1/" + numberShort(1/odds) + "<br>" }
         }
         if (game.dailyBonuses.luckCharges >= 1) {
             document.getElementById("petRarities").innerHTML += "<br>You have " + wholeNumberShort(game.dailyBonuses.luckCharges) + " luck charges<br>x1.5 Luck will be used"
@@ -249,6 +222,7 @@ function latestDrops(x, y) {
 function calculatePetMultis() {
     let baseCooldown = 1
     baseCooldown *= game.researchBonuses.petCooldown
+    baseCooldown *= game.tokenBonuses.petCooldown
     game.pets.cooldown = baseCooldown
     let baseLuck = 1
     baseLuck *= game.tokenBonuses.luck
@@ -280,4 +254,28 @@ function collectAllPets() {
             unboxPet(i)
         }
     }
+}
+
+function calculatePetAbilities() {
+    let average = 1
+    let odds = 0
+    let multi = 1
+    let reference = 0
+    for (let i = 0; i < abilities.length; i++) {
+        reference = abilities[i].reference()
+        odds = abilities[i].oddsBase * reference
+        multi = abilities[i].bonusBase
+        game.pets.abilities[i] = [odds, multi]
+        average *= 1 + odds * (multi - 1)
+    }
+    game.pets.abilityAverage = average
+}
+setInterval(calculatePetAbilities, 50)
+
+function rollAbilities() {
+    let luck = 1
+    for (let i = 0; i < game.pets.abilities.length; i++) {
+        if (Math.random() < game.pets.abilities[i][0]) { luck *= game.pets.abilities[i][1] }
+    }
+    return luck
 }

@@ -1,13 +1,37 @@
-/*function polynomial(x, a) {
+function polynomial(x, a) {
     let result = 0
     let length = a.length
     for (let i = 0; i < length; i++) {
-        if (typeof a[i] === 'number' && !isNaN(a[i])) {result += a[i] * x**(length - i - 1)}
-        else if (a[i].length == 2 && x > a[i][1]) {result += a[i][0] * (x - a[i][1])**(length - i - 1)}
+        if (typeof a[i] === 'number' && !isNaN(a[i])) { result += a[i] * x ** (length - i - 1) }
+        else if (a[i].length == 2 && x > a[i][1]) { result += a[i][0] * (x - a[i][1]) ** (length - i - 1) }
     }
     return result
 }
 
+function displayPolynomial(a) {
+    let result = ""
+    let length = a.length
+    for (let i = 0; i < length; i++) {
+        if (typeof a[i] === 'number' && !isNaN(a[i]) && a[i] != 0) {
+            result += numberShort(a[i])
+            if ((length - i - 1) > 0) {
+                result += "x"
+                if ((length - i - 1) > 1) { result += wholeNumberShort(length - i - 1) }
+                result += " + "
+            }
+        }
+        else if (a[i].length == 2 && a[i][0] != 0) {
+            result += numberShort(a[i][0])
+            if ((length - i - 1) > 0) {
+                result += "(x-" + numberShort(a[i][1]) + ")"
+                if ((length - i - 1) > 1) { result += wholeNumberShort(length - i - 1) }
+                result += " + "
+            }
+        }
+    }
+    return result
+}
+/*
 function calculateUpgradeCost() {
     return displayBig(exponentBig([1, 1], polynomial(5, [1.5, 0.4, 0.4, 0.37, 1])))
 }

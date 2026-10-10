@@ -191,7 +191,7 @@ function countPets(x, y) { //x = starting pet, y = final pet, both included: cou
 
 function countTokenUpgrades(x, y) {
     let count = 0
-    for (i = x; i <= y; i++) { if (game.tokens.upgrades[i] >= tokenUpgrades[i].levels) { count++ } }
+    for (i = x; i <= y; i++) { if (game.tokens.upgrades[i] >= tokenUpgrades[i].levels()) { count++ } }
     return count
 }
 

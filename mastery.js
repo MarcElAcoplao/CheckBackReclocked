@@ -51,7 +51,7 @@ function showMasteryInfo(x) {
 }
 
 function masteryCostDisplay(x) {
-    let result = "Pet cost: " + wholeNumberShort(game.pets.amount[x]) + " / " + wholeNumberShort(mastery[x].petCost) + "<br>MP Cost: " + wholeNumberShort(game.pets.masteryPoints) + " / " + wholeNumberShort(mastery[x].masteryCost)
+    let result = "Pet cost: " + wholeNumberShort(game.pets.amount[x]) + " / " + wholeNumberShort(mastery[x].petCost) + " (" + expectedPetAmountTime(x) + ")<br>MP Cost: " + wholeNumberShort(game.pets.masteryPoints) + " / " + wholeNumberShort(mastery[x].masteryCost) + " (" + expectedMasteryTime(x) + ")"
     return result
 }
 
@@ -80,10 +80,61 @@ function calculateMasteryGain(x, y) {
 function purchaseMastery(x) {
     if (canBuyMastery(x)) {
         game.pets.amount[x] -= mastery[x].petCost
-        if (game.pets.amount[x] <= 0) {game.pets.amount[x] = 1}
+        if (game.pets.amount[x] <= 0) { game.pets.amount[x] = 1 }
         game.pets.masteryPoints -= mastery[x].masteryCost
         game.pets.masteredPetsList[x] = 1
     }
     openCloseMasteryTab()
     openCloseMasteryTab()
+}
+
+function expectedMasteryTime(x) {
+    let result = 0
+    if (game.pets.masteredPetsList[x] == 0) {
+        let petsList = 0
+        let cooldown = 0
+        let mp = 0
+        for (let i = 0; i < petButtons.length; i++) {
+            petsList = petButtons[i].odds()
+            cooldown = petButtons[i].cooldown / game.pets.cooldown
+            for (let j = 0; j < petsList.length; j++) {
+                mp += petsList[j][1] * game.pets.luck * game.pets.abilityAverage * mastery[petsList[j][0]].masteryGain * game.pets.masteredPetsList[petsList[j][0]] / cooldown
+            }
+        }
+        let mpNeeded = mastery[x].masteryCost - game.pets.masteryPoints
+        result = mpNeeded / mp
+        if (result < 0) { result = 0 }
+    }
+    return numberToTime(result)
+}
+
+function expectedPetAmountTime(x) {
+    let result = 0
+    if (game.pets.masteredPetsList[x] == 0) {
+        let petsList = 0
+        let cooldown = 0
+        let speed = 0
+        let i = 0
+        let j = 0
+        let found = false
+        while (i < petButtons.length && found == false) {
+            petsList = petButtons[i].odds()
+            cooldown = petButtons[i].cooldown
+            j = 0
+            while (j < petsList.length && found == false) {
+                if (petsList[j][0] == x) { found = true }
+                else { j++ }
+            }
+            if (found == false) { i++ }
+            else {
+                speed = petsList[j][1] * game.pets.luck * game.pets.abilityAverage * game.pets.cooldown / cooldown
+            }
+        }
+        if (found == true) {
+            let petsNeeded = mastery[x].petCost - game.pets.amount[x]
+            result = petsNeeded / speed
+            if (result < 0) { result = 0 }
+        }
+    }
+    return numberToTime(result)
 }

@@ -45,8 +45,8 @@ function displayDaily() {
 
 function showDailyInfo(x) {
     if (x == 0) { document.getElementById("dailyInfo").innerHTML = "" }
-    else if (x == 1) { document.getElementById("dailyInfo").innerHTML = "<center><p style='color: white'><span style='font-size: 32px; font-weight: bold'><br>Day " + wholeNumberShort(game.daily.days) + "</span><br></p><br><img src='img/daily/1.png' style='width: 50%'><br><p style='color: white'><span style='font-size: 32px; font-weight: bold'>Gain " + wholeNumberShort(100 + 5 * (game.daily.days - 1)) + " Daily tokens</span><br>Time storage: " + numberToTime(game.daily.cooldown) + " / " + numberToTime(game.daily.cooldownCap) + "<br>Can claim " + wholeNumberShort(Math.floor(game.daily.cooldown / 86400)) + " times<br>Next claim in " + numberToTime(86400 - game.daily.cooldown % 86400) + "</p></center><br>" }
-    else { document.getElementById("dailyInfo").innerHTML = "<br><br><center><p style='color: white'><span style='font-size: 32px; font-weight: bold'>" + dailyUpgrades[x].name + "</span><br>You have " + wholeNumberShort(game.daily.upgrades[x]) + "<br><br><img src='img/daily/" + x + ".png' style='width: 50%'><br><br><p style='color: white'><span style='font-size: 32px; font-weight: bold'>Effect:</span><br>" + dailyUpgrades[x].effect + "<br>" + showExtraDailyInfo(x) + "<br><p style='color: white'><span style='font-size: 32px; font-weight: bold'>Cost:</span><br>" + numberShort(game.daily.tokens) + " / " + numberShort(dailyUpgrades[x].baseCost + dailyUpgrades[x].costScaling * game.daily.upgrades[x]) }
+    else if (x == 1) { document.getElementById("dailyInfo").innerHTML = "<center><p style='color: white'><span style='font-size: 32px; font-weight: bold'><br>Day " + wholeNumberShort(game.daily.days) + "</span><br></p><br><img src='img/daily/1.png' style='width: 50%'><br><p style='color: white'><span style='font-size: 32px; font-weight: bold'>Gain " + numberShort(calculateDailyGain()) + " Daily tokens</span><br>Formula: " + displayPolynomial(game.daily.gain) + "<br>Time storage: " + numberToTime(game.daily.cooldown) + " / " + numberToTime(game.daily.cooldownCap) + "<br>Can claim " + wholeNumberShort(Math.floor(game.daily.cooldown / 86400)) + " times<br>Next claim in " + numberToTime(86400 - game.daily.cooldown % 86400) + "</p></center><br>" }
+    else { document.getElementById("dailyInfo").innerHTML = "<br><br><center><p style='color: white'><span style='font-size: 32px; font-weight: bold'>" + dailyUpgrades[x].name + "</span><br>You have " + wholeNumberShort(game.daily.upgrades[x]) + "/" + wholeNumberShort(dailyUpgrades[x].levels()) + "<br><br><img src='img/daily/" + x + ".png' style='width: 50%'><br><br><p style='color: white'><span style='font-size: 32px; font-weight: bold'>Effect:</span><br>" + dailyUpgrades[x].effect + "<br>" + showExtraDailyInfo(x) + "<br><p style='color: white'><span style='font-size: 32px; font-weight: bold'>Cost:</span><br>" + numberShort(game.daily.tokens) + " / " + numberShort(dailyUpgrades[x].baseCost + dailyUpgrades[x].costScaling * game.daily.upgrades[x]) }
 }
 
 function showExtraDailyInfo(x) {
@@ -69,6 +69,12 @@ function showExtraDailyInfo(x) {
     if (x == 7) {
         result = "Data time: " + numberToTime(game.dailyEffects.dataTime) + "<br>Multiplier: +10%/Level<br>(Data added does nothing if no research is active)"
     }
+    if (x == 8) {
+        result = "Replicanti gained: x" + displayBig(exponentBig(calculateReplicantiGain(0), 1.01**game.daily.upgrades[8])) + "<br>Replicanti multi: x" + displayBig(game.dailyBonuses.replicantiMulti)
+    }
+    if (x == 9) {
+        result = "Ticks added: " + wholeNumberShort(game.dailyEffects.ticks * 10) + "<br>Multiplier: +5%/Level"
+    }
     return result
 }
 
@@ -81,7 +87,7 @@ function buyDailyUpgrade(x) {
     else {
         let cost = dailyUpgrades[x].baseCost + dailyUpgrades[x].costScaling * game.daily.upgrades[x]
         let amount = 0
-        if (game.daily.tokens >= cost) {
+        if (game.daily.tokens >= cost && game.daily.upgrades[x] < dailyUpgrades[x].levels()) {
             game.daily.tokens -= cost
             //Calls each individual purchase thing effect
             if (x == 2) {
@@ -112,6 +118,13 @@ function buyDailyUpgrade(x) {
             if (x == 7) {
                 game.research.data += game.research.power * game.dailyEffects.dataTime
             }
+            if (x == 8) {
+                game.replicanti.amount = multiplyBig(game.replicanti.amount, exponentBig(calculateReplicantiGain(0), 1.01**game.daily.upgrades[8]))
+                if (compareBig(game.replicanti.amount, [1, 10 ** 300])) { game.replicanti.amount = [1, 10 ** 300] }
+            }
+            if (x == 9) {
+                addTicks(game.dailyEffects.ticks * 10)
+            }
             game.daily.upgrades[x]++
             showDailyInfo(x)
         }
@@ -121,10 +134,15 @@ function buyDailyUpgrade(x) {
 function claimDailyReward() {
     if (game.daily.cooldown >= 86400) {
         game.daily.cooldown -= 86400
-        game.daily.tokens += 100 + 5 * (game.daily.days - 1)
+        game.daily.tokens += calculateDailyGain()
         game.daily.days++
         game.daily.upgrades[2] = 0
     }
+}
+
+function calculateDailyGain() {
+    let amount = polynomial(game.daily.days, game.daily.gain)
+    return amount
 }
 
 function calculateDailyBonuses() {
@@ -136,6 +154,11 @@ function calculateDailyBonuses() {
     game.dailyBonuses.xpBoost = addBig(1, multiplyBig(game.dailyEffects.xpBase, game.daily.upgrades[5]))
     game.dailyBonuses.tokenBonus = (1 + game.dailyEffects.tokenBonusBase * game.daily.upgrades[6])
     game.dailyBonuses.rp = (1 + game.dailyEffects.rpBase * game.daily.upgrades[7])
+    game.dailyBonuses.ticketMulti = (1 + 0.05 * game.daily.upgrades[9])
+    game.dailyBonuses.replicantiMulti = exponentBig(1.05, game.daily.upgrades[8])
+    let baseDailyGain = [0, 5, 100]
+    baseDailyGain[1] += game.tokens.upgrades[33]
+    game.daily.gain = baseDailyGain
 }
 setInterval(calculateDailyBonuses, 50)
 
