@@ -3,3 +3,4 @@ THINGS TO DO BEFORE PUBLISHING AN UPDATE
 -Make sure everything works properly from a fresh save
 
 each time github fails when pushing update I will write a new line here and push something else
+mimimimimimi
