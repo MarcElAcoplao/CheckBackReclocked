@@ -237,7 +237,7 @@ function calculateResearchBonuses() {
     if (game.research.upgrades[28] >= 1) { baseTokenMulti *= 2 }
     if (game.research.upgrades[36] >= 1) { baseTokenMulti *= 1 + 0.1 * countResearches()}
     if (game.research.upgrades[40] >= 1) { baseTokenMulti *= 2 }
-    if (game.research.upgrades[42] >= 1) { baseTokenMulti *= 3 }
+    if (game.research.upgrades[46] >= 1) { baseTokenMulti *= 5 }
     game.researchBonuses.tokenMulti = baseTokenMulti
     let baseRPCooldown = 1 //RP Cooldowns from research
     if (game.research.upgrades[19] >= 1 && game.pets.amount[17] >= 1) { baseRPCooldown *= 1.4 }

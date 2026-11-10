@@ -1,9 +1,9 @@
 const replicantiButtons = [
     { name: "replicantiButton0", multi: [2, 0], cooldown: 900, unlock: 35 }, //x2, 15min
-    { name: "replicantiButton1", multi: [5, 0], cooldown: 1500, unlock: 36 }, //x5, 25min
-    { name: "replicantiButton2", multi: [1.2, 1], cooldown: 3000, unlock: 37 }, //x12, 50min
-    { name: "replicantiButton3", multi: [3, 1], cooldown: 6600, unlock: 40 }, //x30, 1h 50min
-    { name: "replicantiButton4", multi: [1, 2], cooldown: 14400, unlock: 45 }, //x100, 4
+    { name: "replicantiButton1", multi: [8, 0], cooldown: 1500, unlock: 36 }, //x8, 25min
+    { name: "replicantiButton2", multi: [4, 1], cooldown: 3000, unlock: 37 }, //x40, 50min
+    { name: "replicantiButton3", multi: [2, 2], cooldown: 6600, unlock: 40 }, //x200, 1h 50min
+    { name: "replicantiButton4", multi: [1, 3], cooldown: 14400, unlock: 45 }, //x1000, 4h
 ]
 
 function replicantiButton(x) {

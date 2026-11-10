@@ -2,6 +2,14 @@ Check Back Reclocked Changelog (dd/mm/yy for americans)
 Version number is for ingame checks (it only checks for the x in x.2) to avoid NaN's on update
 ------------------------------
 
+Version 7 (v0.3.1): The Achievements Update (10/11/26)
+-Achievements! Complete some ingame goals and get awarded with daily tokens. Yes, they are now not exclusive to daily rewards, but rather are now this special currency.
+-Token/Ticket upgrade number counter, and buttons show up if there is an upgrade which the level goal is obtained, but is missing previous upgrades (token only for now)
+-More buttons! Enjoy some additional unlocks to get some of the last achievement tiers
+-Buffed later replicanti buttons. Due to how the replicanti nature works, other buttons were progressively less efficient compared to the first one. Also changed 2 token upgrades that buffed replicanti (they are stronger now)
+-2 Additional pet masteries. They should help with the xp requirements at some points.
+-Fixed bugs? I don't know. Created bugs? Possibly.
+
 Version 6 (v0.3): The Replicanti Update (10/10/26)
 -Content lines (if supports spoilers, click to reveal spoilers)
     ||-Replicanti! Click on buttons to multiply this resource, and make it grow up until the pre-defined 1e1e300 cap. Grants an xp multiplier + something else, eventually||

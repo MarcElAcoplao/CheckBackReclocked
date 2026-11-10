@@ -70,18 +70,21 @@ function playerStats() {
     result += "Unlocks: " + wholeNumberShort(game.player.unlocks) + " / " + wholeNumberShort(totalUnlocks) + "<br>"
     result += "Time played: " + numberToTime(game.player.timePlayed) + "<br>"
     result += "Button clicks: " + wholeNumberShort(game.player.buttonClicks) + "<br>"
-    if (game.player.unlocks >= 5) {
+    if (game.player.highestUnlocks >= 5) {
         result += "Crates opened: " + wholeNumberShort(game.player.cratesOpened) + "<br>"
-        result += "Pets owned: " + countPets(1, pets.length - 1) + " / " + wholeNumberShort(pets.length - 1) + "<br>"
+        result += "Pets owned: " + game.pets.discoveredTotal + " / " + wholeNumberShort(pets.length - 1) + "<br>"
     }
-    if (game.player.unlocks >= 18) {
+    if (game.player.highestUnlocks >= 18) {
         result += "Token upgrades: " + countTokenUpgrades(1, tokenUpgrades.length - 1) + " / " + wholeNumberShort(tokenUpgrades.length - 1) + "<br>"
     }
     if (game.prestige.reset == 1) {
         result += "Researches: " + countResearches() + " / " + wholeNumberShort(researches.length - 1) + "<br>"
     }
-    if (game.player.unlocks >= 26) {
+    if (game.player.highestUnlocks >= 26) {
         result += "Mastered pets: " + wholeNumberShort(game.pets.masteredPets) + " / " + wholeNumberShort(pets.length - 1) + "<br>"
+    }
+    if (game.player.highestUnlocks >= 3) {
+        result += "Achievements: " + wholeNumberShort(countAchievements("owned")) + " / " + wholeNumberShort(countAchievements("total")) + " (" + numberShort(countAchievements("owned") * 100 / countAchievements("total")) + "%)<br>"
     }
     return result
 }
@@ -114,7 +117,7 @@ function petStats() {
     if (game.player.unlocks >= petButtons[3].unlock) { result += "Fire crate: " + wholeNumberShort(countPets(19, 26)) + "/8<br>" }
     if (game.player.unlocks >= petButtons[4].unlock) { result += "Skeleton crate: " + wholeNumberShort(countPets(27, 34)) + "/8<br>" }
     if (game.player.unlocks >= petButtons[5].unlock) { result += "Ghost crates: " + wholeNumberShort(countPets(35, 42)) + "/8<br>" }
-    result += "TOTAL: " + wholeNumberShort(countPets(1, pets.length - 1)) + "/" + wholeNumberShort(pets.length - 1) + "<br>"
+    result += "TOTAL: " + wholeNumberShort(game.pets.discoveredTotal) + "/" + wholeNumberShort(pets.length - 1) + "<br>"
     if (game.pets.luck != 1) {
         result += "<br>Luck factors:<br>"
         if (game.tokenBonuses.luck > 1) { result += "x" + numberShort(game.tokenBonuses.luck) + " from token upgrades<br>" }
@@ -183,12 +186,6 @@ function rpStats() {
     return result
 }
 
-function countPets(x, y) { //x = starting pet, y = final pet, both included: countPets(3, 6) = (3, 4, 5, 6)
-    let count = 0
-    for (i = x; i <= y; i++) { if (game.pets.amount[i] >= 1) { count++ } }
-    return count
-}
-
 function countTokenUpgrades(x, y) {
     let count = 0
     for (i = x; i <= y; i++) { if (game.tokens.upgrades[i] >= tokenUpgrades[i].levels()) { count++ } }
@@ -206,3 +203,15 @@ function cratesCompleted() {
     game.player.cratesComplete = count
 }
 setInterval(cratesCompleted, 50)
+
+function updateHighests() {
+    if (compareBig(game.xp.level, game.player.highestLevel)) { game.player.highestLevel = game.xp.level } //If your current level is set to something higher than your recorded highest level, your highest level gets set to that level
+    game.pets.discoveredTotal = Math.max(countPets(1, pets.length - 1), game.pets.discoveredTotal) //Highest ever discovered
+    if (compareBig(game.xpBoost.effectiveBoost, game.achievements.highestXPBoostEffect)) { game.achievements.highestXPBoostEffect = game.xpBoost.effectiveBoost }
+    game.achievements.highestTokenBank = Math.max(game.achievements.highestTokenBank, game.tokens.bankAmount)
+    game.achievements.highestRP = Math.max(game.achievements.highestRP, game.research.power)
+    game.achievements.highestMasteredPets = Math.max(game.achievements.highestMasteredPets, game.pets.masteredPets)
+    if (compareBig(game.replicanti.amount, game.achievements.highestReplicanti)) { game.achievements.highestReplicanti = game.replicanti.amount}
+    game.achievements.highestTickets = Math.max(game.achievements.highestTickets, game.tickets.amount)
+}
+setInterval(updateHighests, 50)

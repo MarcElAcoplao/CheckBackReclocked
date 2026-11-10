@@ -270,7 +270,7 @@ img {
     font-size: 1.5vmin;
 }
 
-#petsDiv, #unboxDiv, #statsDiv, #dailyDiv, #researchDiv, #masteryDiv {
+#petsDiv, #unboxDiv, #statsDiv, #dailyDiv, #researchDiv, #masteryDiv, #achievementsDiv {
     position: fixed;
     top: 50%;
     left: 50%;
@@ -297,11 +297,11 @@ img {
     z-index: 20;
 }
 
-#petsCloseButton:hover, #unboxCloseButton:hover, #statsCloseButton:hover, #dailyCloseButton:hover, #researchCloseButton:hover, #masteryCloseButton:hover {
+#petsCloseButton:hover, #unboxCloseButton:hover, #statsCloseButton:hover, #dailyCloseButton:hover, #researchCloseButton:hover, #masteryCloseButton:hover, #achievementsCloseButton:hover {
     cursor: pointer;
 }
 
-#petsList, #unboxList, #statsList, #dailyList, #researchList, #masteryList {
+#petsList, #unboxList, #statsList, #dailyList, #researchList, #masteryList, #achievementsList {
     position: relative;
     margin: 0;
     width: 60%;
@@ -309,13 +309,13 @@ img {
     overflow-y: scroll;
 }
 
-#petsListInner, #unboxListInner, #statsListInner, #dailyListInner, #researchListInner, #masteryListInner {
+#petsListInner, #unboxListInner, #statsListInner, #dailyListInner, #researchListInner, #masteryListInner, #achievementsListInner {
     position: absolute;
     top: 0;
     left: 0;
 }
 
-#petInfo, #unboxInfo, #statsInfo, #dailyInfo, #researchInfo, #masteryInfo{
+#petInfo, #unboxInfo, #statsInfo, #dailyInfo, #researchInfo, #masteryInfo, #achievementsInfo {
     position: fixed;
     top: 0;
     right: 0;

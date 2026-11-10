@@ -1,4 +1,4 @@
-const unlockLevelsSmall = [2, 3, 4, 6, 8, 12, 20, 30, 40, 60, 80, 100, 150, 200, 250, 300, 400, 500, 1000, 2000, 5000, 15000, 30000, 50000, 100000, 101000, 10**6, 5*10**6, 1.5*10**7, 5*10**7, 10**8, 4*10**8, 10**9, 5*10**9, 2*10**10, 10**11, 4*10**11, 3*10**12, 10**14, 3*10**15, 10**16, 2*10**16, 10**17, 10**18, 2*10**19, 5*10**20] //This will probably be remade completely
+const unlockLevelsSmall = [2, 3, 4, 6, 8, 12, 20, 30, 40, 60, 80, 100, 150, 200, 250, 300, 400, 500, 1000, 2000, 5000, 15000, 30000, 50000, 100000, 101000, 10**6, 5*10**6, 1.5*10**7, 5*10**7, 10**8, 4*10**8, 10**9, 5*10**9, 2*10**10, 10**11, 4*10**11, 3*10**12, 10**14, 3*10**15, 10**16, 2*10**16, 10**17, 10**18, 2*10**19, 3*10**20, 10**21, 10**22] //This will probably be remade completely
 //const unlockLevelsBig = [1000000000]
 const levelBarTextures = [50, 55, 60, 65, 70, 80, 90, 100, 200]
 
@@ -164,17 +164,18 @@ const tokenUpgrades = [ //Name, base upgrade cost, cost scaling, total levels, e
     {name: "tokenUpgrade20", baseCost: 100, costScaling: 1, levels: () => 100, unlock: 32, reqs: 0, recList: [0], reset: true, effect: "+0.1x XP per level. And x5 if maxed"},
     {name: "tokenUpgrade21", baseCost: 1000, costScaling: 5, levels: () => 3 * (1 + game.research.upgrades[45]), unlock: 33, reqs: 0, recList: [0], reset: true, effect: "x(1 + level^2) XPBoost"},
     {name: "tokenUpgrade22", baseCost: 10000, costScaling: 7.7, levels: () => 2, unlock: 34, reqs: 1, recList: [17], reset: true, effect: "+5% Chance of x10 Crate Luck on open"},
-    {name: "tokenUpgrade23", baseCost: 50000, costScaling: 200, levels: () => 1 * (1 + game.research.upgrades[45]), unlock: 36, reqs: 0, recList: [0], reset: true, effect: "x2 Replicanti Multiplier"},
+    {name: "tokenUpgrade23", baseCost: 50000, costScaling: 10, levels: () => 2 * (1 + game.research.upgrades[45]), unlock: 36, reqs: 0, recList: [0], reset: true, effect: "x2 Replicanti Multiplier/level"},
     {name: "tokenUpgrade24", baseCost: 3000, costScaling: 1, levels: () => 30, unlock: 37, reqs: 0, recList: [0], reset: true, effect: "+0.1x RP per level. And x2 if maxed"},
     {name: "tokenUpgrade25", baseCost: 60000, costScaling: 1, levels: () => 1, unlock: 38, reqs: 0, recList: [0], reset: true, effect: "/1.3 RP/Replicanti cooldowns"},
     {name: "tokenUpgrade26", baseCost: 10000, costScaling: 3, levels: () => 3, unlock: 38, reqs: 0, recList: [0], reset: true, effect: "+/0.3 XP, Crate and XPBoost cooldowns"},
-    {name: "tokenUpgrade27", baseCost: 70000, costScaling: 1, levels: () => 1, unlock: 38, reqs: 0, recList: [0], reset: true, effect: "x5 Replicanti multi BUT /0.6 cooldowns"},
+    {name: "tokenUpgrade27", baseCost: 70000, costScaling: 1, levels: () => 1, unlock: 38, reqs: 0, recList: [0], reset: true, effect: "x5 Replicanti multi"},
     {name: "tokenUpgrade28", baseCost: 100000, costScaling: 2, levels: () => 2, unlock: 38, reqs: 3, recList: [25, 26, 27], reset: true, effect: "+^0.1 XPBoost effect expo per level"},
     {name: "tokenUpgrade29", baseCost: 555000, costScaling: 5, levels: () => 1, unlock: 39, reqs: 0, recList: [0], reset: true, effect: "x5 XP, XPBoost, RP and Replicanti"},
-    {name: "tokenUpgrade30", baseCost: 5000000, costScaling: 1.1, levels: () => 5 * (1 + game.research.upgrades[45]), unlock: 43, reqs: 0, recList: [0], reset: false, effect: "+0.5x Tokens per level (permanent --> p)"},
+    {name: "tokenUpgrade30", baseCost: 5000000, costScaling: 1.1, levels: () => 5 * (1 + game.research.upgrades[45]), unlock: 43, reqs: 0, recList: [0], reset: false, effect: "+0.5x Tokens/level (permanent --> p)"},
     {name: "tokenUpgrade31", baseCost: 5000000, costScaling: 1.5, levels: () => 5, unlock: 43, reqs: 0, recList: [0], reset: false, effect: "+0.2x Tickets per level (p)"},
-    {name: "tokenUpgrade32", baseCost: 1000000, costScaling: 1.1, levels: () => 100, unlock: 44, reqs: 0, recList: [0], reset: false, effect: "x1.1 XP per level, multiplicatively (p)"},
+    {name: "tokenUpgrade32", baseCost: 1000000, costScaling: 1.1, levels: () => 100, unlock: 44, reqs: 0, recList: [0], reset: false, effect: "x1.1 XP per level (p)"},
     {name: "tokenUpgrade33", baseCost: 1000000, costScaling: 10, levels: () => 3 + game.tickets.upgrades[5], unlock: 46, reqs: 0, recList: [0], reset: false, effect: "+1 Daily token/day per level (p)"},
+    {name: "tokenUpgrade34", baseCost: 10**9, costScaling: 1, levels: () => 1, unlock: 48, reqs: 0, recList: [0], reset: false, effect: "x10 RP, Repli, /1.2 Repli cd (p)"},
 ]
 
 const dailyUpgrades = [
@@ -237,6 +238,7 @@ const researches = [
     {name: "SPEEEEEEEED", data: 5*10**15, unlock: 45, effect: "/2 XP, Crate, XPBoost, RP and Replicanti cooldowns<br>"},
     {name: "Replicated research", data: 10**16, unlock: 45, effect: "Replicanti boosts RP gain, formula:<br>(1 + % to limit)^2<br>x13 replicanti, pump it up"},
     {name: "New technologies", data: 3*10**16, unlock: 46, effect: "x2 levels available to (some) token upgrades"},
+    {name: "YAFTU (Yet another flat token upgrade)", data: 10**17, unlock: 47, effect: "x5 tokens"},
 ]
 
 const mastery = [
@@ -259,8 +261,8 @@ const mastery = [
     {petCost: 2000, masteryCost: 2*10**6, masteryGain: 1000},
     {petCost: 1500, masteryCost: 7*10**6, masteryGain: 3000},
     {petCost: 1000, masteryCost: 10**7, masteryGain: 10000},
-    {petCost: 1000, masteryCost: 10**300, masteryGain: 19}, //Crate 4
-    {petCost: 1000, masteryCost: 10**300, masteryGain: 20},
+    {petCost: 100000, masteryCost: 10**8, masteryGain: 5000}, //Crate 4
+    {petCost: 200000, masteryCost: 5*10**8, masteryGain: 15000},
     {petCost: 1000, masteryCost: 10**300, masteryGain: 21},
     {petCost: 1000, masteryCost: 10**300, masteryGain: 22},
     {petCost: 1000, masteryCost: 10**300, masteryGain: 23},
@@ -292,4 +294,5 @@ const ticketUpgrades = [ //Name, base upgrade cost, cost scaling, total levels, 
     {name: "ticketUpgrade3", baseCost: 10, costScaling: 1, levels: () => 1, unlock: 43, reqs: 0, recList: [0], effect: "x10 XPBoost and Replicanti multi"},
     {name: "ticketUpgrade4", baseCost: 25, costScaling: 1, levels: () => 1, unlock: 44, reqs: 0, recList: [0], effect: "x10 RP, x5 Tokens, /2 Replicanti cooldowns"},
     {name: "ticketUpgrade5", baseCost: 250, costScaling: 2, levels: () => 2, unlock: 46, reqs: 0, recList: [0], effect: "+1 token upgrade 33 levels/level"},
+    {name: "ticketUpgrade6", baseCost: 250, costScaling: 1.25, levels: () => 4, unlock: 47, reqs: 2, recList: [2, 3], effect: "x2 XPBoost and x4 XP per level"},
 ]

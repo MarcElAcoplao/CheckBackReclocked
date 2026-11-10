@@ -124,7 +124,7 @@ function tokenUpgradeAvailable(x) {
             result = completed
         }
     }
-    if (x == 11 && game.prestige.reset == false) {result = false}
+    if (x >= 11 && game.prestige.reset == false) {result = false}
     return result
 }
 
@@ -178,19 +178,21 @@ function calculateTokenUpgradeBoosts() {
     baseRP *= (1 + game.tokens.upgrades[18])
     baseRP *= (1 + 0.1 * game.tokens.upgrades[24])
     baseRP *= (1 + 4 * game.tokens.upgrades[29])
+    baseRP *= (1 + 9 * game.tokens.upgrades[34])
     if (game.tokens.upgrades[24] >= tokenUpgrades[24].levels()) {baseRP *= 2}
     game.tokenBonuses.rpMulti = baseRP
     let baseReplicanti = [1, 0] //replicanti
-    baseReplicanti = multiplyBig(baseReplicanti, 1 + game.tokens.upgrades[23])
+    baseReplicanti = multiplyBig(baseReplicanti, 2 ** game.tokens.upgrades[23])
     baseReplicanti = multiplyBig(baseReplicanti, 1 + 4 * game.tokens.upgrades[27])
     baseReplicanti = multiplyBig(baseReplicanti, 1 + 4 * game.tokens.upgrades[29])
+    baseReplicanti = multiplyBig(baseReplicanti, 1 + 9 * game.tokens.upgrades[34])
     game.tokenBonuses.replicantiMulti = baseReplicanti
     let baseRPcooldown = 1 //rp cooldowns
     baseRPcooldown *= (1 + 0.3 * game.tokens.upgrades[25])
     game.tokenBonuses.rpCooldown = baseRPcooldown
     let baseReplicantiCooldown = 1 //replicanti cooldowns
     baseReplicantiCooldown *= (1 + 0.3 * game.tokens.upgrades[25])
-    baseReplicantiCooldown *= (1 - 0.4 * game.tokens.upgrades[27])
+    baseReplicantiCooldown *= (1 + 0.2 * game.tokens.upgrades[34])
     game.tokenBonuses.replicantiCooldown = baseReplicantiCooldown
     let baseTickets = 1 //tickets
     baseTickets *= (1 + 0.2 * game.tokens.upgrades[31])
@@ -204,6 +206,17 @@ function buyAllTokens() {
             buyTokenUpgrade(i)
         }
     }
+}
+
+function tokenUpgradeRequirements(x) {
+    result = ""
+    if (tokenUpgrades[x].reqs >= 1) {
+        for (let i = 0; i < tokenUpgrades[x].reqs; i++) {
+            if (i >= 1) {result += ", "}
+            result += tokenUpgrades[x].recList[i]
+        }
+    }
+    return result
 }
 
 function calculateTicketStats() {
@@ -324,9 +337,11 @@ function calculateTicketUpgradeBoosts() {
     game.ticketBonuses.tokenMulti = baseTokens
     let baseXPMulti = [1, 0] //XP multi bonuses
     baseXPMulti = multiplyBig(baseXPMulti, 1 + game.tickets.upgrades[2] ** 2)
+    baseXPMulti = multiplyBig(baseXPMulti, 4 ** game.tickets.upgrades[6])
     game.ticketBonuses.xpMulti = baseXPMulti
     let baseXPBoostMulti = [1, 0] //XPBoost multi bonuses
     baseXPBoostMulti = multiplyBig(baseXPBoostMulti, 1 + 9 * game.tickets.upgrades[3])
+    baseXPBoostMulti = multiplyBig(baseXPBoostMulti, 2 ** game.tickets.upgrades[6])
     game.ticketBonuses.xpBoostMulti = baseXPBoostMulti
     let baseRPMulti = 1 //rp multi
     baseRPMulti *= (1 + 9 * game.tickets.upgrades[4])

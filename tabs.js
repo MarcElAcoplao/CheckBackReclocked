@@ -1,6 +1,7 @@
 //This might be removed and turned into some sort of "Dodecadragons" map-like grid
 const mainTabs = [ //Represents the names and unlocks for each main tab
     { name: "dailyButton", unlock: 3 },
+    { name: "achievementsButton", unlock: 3 },
     { name: "InventoryTab", unlock: 5 },
     { name: "MainTab", unlock: 5 },
     { name: "PrestigeTab", unlock: 25 },
@@ -87,7 +88,7 @@ function displayTabContent() {
     }
     else { document.getElementById("tokenButton0").style.display = "none" } //This is the check for every token upgrade
     for (i = 1; i < size; i++) {
-        if (tokenUpgradeAvailable(i) && currentTab == "[2,4]") { document.getElementById(tokenUpgrades[i].name).style.display = "block" }
+        if (game.player.unlocks >= tokenUpgrades[i].unlock && game.tokens.upgrades[i] < tokenUpgrades[i].levels() && (i < 11 || game.prestige.reset == true) && currentTab == "[2,4]") { document.getElementById(tokenUpgrades[i].name).style.display = "block" }
         else { document.getElementById(tokenUpgrades[i].name).style.display = "none" }
     }
     if (currentTab == "[3,1]" && game.prestige.reset == false) { document.getElementById("prestigeButton").style.display = "block" }

@@ -122,6 +122,7 @@
             <button class="button" id="tokenUpgrade31" style="display: none" onclick="buyTokenUpgrade(31)">Upgrade 31</button>
             <button class="button" id="tokenUpgrade32" style="display: none" onclick="buyTokenUpgrade(32)">Upgrade 32</button>
             <button class="button" id="tokenUpgrade33" style="display: none" onclick="buyTokenUpgrade(33)">Upgrade 33</button>
+            <button class="button" id="tokenUpgrade34" style="display: none" onclick="buyTokenUpgrade(34)">Upgrade 34</button>
 
             <button class="button" id="prestigeButton" style="display: none" onclick="prestigeReset()">Resets all your progress and applies harsh nerfs, but unlocks a new feature. Required to progress</button>
             <button class="button" id="ResearchMenu" style="display: none" onclick="openCloseResearchTab()">View researches</button>
@@ -152,6 +153,7 @@
             <button class="button" id="ticketUpgrade3" style="display: none" onclick="buyTicketUpgrade(3)">Upgrade 3</button>
             <button class="button" id="ticketUpgrade4" style="display: none" onclick="buyTicketUpgrade(4)">Upgrade 4</button>
             <button class="button" id="ticketUpgrade5" style="display: none" onclick="buyTicketUpgrade(5)">Upgrade 5</button>
+            <button class="button" id="ticketUpgrade6" style="display: none" onclick="buyTicketUpgrade(6)">Upgrade 6</button>
             
         </div>
 
@@ -179,12 +181,13 @@
             </div>
 
             <button class="button" id="dailyButton" style="display: none" onclick="openCloseDailyTab()">Daily rewards</button>
+            <button class="button" id="achievementsButton" style="display: none" onclick="openCloseAchievementsTab()">Achievements</button>
         </div>
 
         <div id="rightFooterColumn">
             <p id="versionText">Check Back Reclocked <a
                     href="https://github.com/MarcElAcoplao/CheckBackReclocked/blob/main/changelog.txt"
-                    target="_blank">v0.3</a> (Creator: MarcElAcoplao, <a href="https://discord.gg/YaSk8e2wFt"
+                    target="_blank">v0.3.1</a> (Creator: MarcElAcoplao, <a href="https://discord.gg/YaSk8e2wFt"
                     target="_blank">Discord</a>)
             </p>
             <div id="settingsContainer">
@@ -268,6 +271,16 @@
         <div id="masteryInfo"></div>
     </div>
 
+    <div id="achievementsDiv">
+        <p style='font-size: 5vh; font-weight: bold; color: #ccc; margin: 0; margin-left: 6px'>Achievements</p>
+        <p style='font-size: 1.6vh; color: #ccc; margin: 0; margin-bottom: 6px; margin-left: 6px'>Complete achievements and gain daily tokens</p>
+        <button class="closeButton" onclick="openCloseAchievementsTab()">Close</button>
+        <div id="achievementsList">
+            <div id="achievementsListInner"></div>
+        </div>
+        <div id="achievementsInfo"></div>
+    </div>
+
     <input type="file" id="importFile" display ="none" accept=".txt" hidden>
     
     <script src="constants.js"></script>
@@ -283,6 +296,7 @@
     <script src="mastery.js"></script>
     <script src="replicanti.js"></script>
     <script src="tycoon.js"></script>
+    <script src="achievements.js"></script>
     <script src="script.js"></script>
     <script src="stats.js"></script>
     <script defer>setAutoSave()</script>

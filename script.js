@@ -90,7 +90,7 @@ function reset() {
             cratesOpened: 0, //Normal
             online: false, //If this is false, whenever it updates cooldowns it won't count for playtime
             crateEmoji: true, //Bool
-            versionNumber: 6, //Normal
+            versionNumber: 7, //Normal
             cratesComplete: 0, //Normal
             fileExport: true, //Bool
         },
@@ -172,6 +172,16 @@ function reset() {
             tier: 0, //Normal
             upgrades: [0, 0, 0, 0, 0], //List of normals
             autoTicks: 0, //Normal
+        },
+        achievements: {
+            completions: [0, 0, 0], //List of normals
+            canClaim: false, //Boolean
+            highestXPBoostEffect: [1, 0], //Big
+            highestTokenBank: 1, //Normal
+            highestRP: 0, //Normal
+            highestMasteredPets: 0, //Normal
+            highestReplicanti: [1, 0], //Big
+            highestTickets: 0, //normal
         }
     }
 }
@@ -331,6 +341,10 @@ function updateStuffOnLoad() {
     for (let i = 0; i < ticketUpgrades.length; i++) {
         if (!game.tickets.upgrades[i]) { game.tickets.upgrades[i] = 0 }
     }
+    if (!game.achievements.completions) { game.achievements.completions = [0, 0] }
+    for (let i = 0; i < achievements.length; i++) {
+        if (!game.achievements.completions[i]) { game.achievements.completions[i] = 0 }
+    }
     /*if (!game.mining.oreCooldowns) { game.mining.oreCooldowns = [0] }
     if (!game.mining.oreInv) { game.mining.oreInv = [[0, 0], [0, 0]] }
     if (!game.mining.grid) { game.mining.grid = [[0, 0], [0, 0]] }
@@ -386,6 +400,15 @@ function updateStuffOnLoad() {
         game.pets.abilities = [[0, 1]]
         game.tickets.amount = 0
         game.player.fileExport = true
+    }
+    if (game.player.versionNumber == 6) {
+        game.player.versionNumber = 7
+        game.achievements.highestXPBoostEffect = [1, 0]
+        game.achievements.highestTokenBank = 1
+        game.achievements.highestRP = 0
+        game.achievements.highestMasteredPets = 0
+        game.achievements.highestReplicanti = [1, 0]
+        game.achievements.highestTickets = 0
     }
     changeTheme(game.player.currentTheme)
 }
@@ -449,9 +472,16 @@ function updateSmall() { //This part checks if buttons are available or not, add
         else { document.getElementById("tokenButton0").disabled = true }
         document.getElementById("tokenButton0").innerHTML = "Tokens: " + numberShort(game.tokens.amount) + "<br>Ticks: " + numberShort(game.tokens.ticks) + "; Next gain: " + numberShort(game.tokens.gain) + "<br>Bank amount: " + numberShort(game.tokens.bankAmount) + " (Click to collect)<br>Average gain: " + numberShort(game.tokens.bankAmount / Math.max(1, game.tokens.ticks)) + "<br>Next auto tick: " + numberToTime((1200 - game.tokens.autoTicks) / 20)
         for (let i = 1; i < tokenUpgrades.length; i++) {
-            document.getElementById(tokenUpgrades[i].name).innerHTML = "Level " + wholeNumberShort(game.tokens.upgrades[i]) + "/" + wholeNumberShort(tokenUpgrades[i].levels()) + ". Effect: " + tokenUpgrades[i].effect + "<br>Cost: " + showTokenCost(i)
-            if (game.tokens.amount >= (tokenUpgrades[i].baseCost * (tokenUpgrades[i].costScaling ** game.tokens.upgrades[i]))) { document.getElementById(tokenUpgrades[i].name).disabled = false }
-            else { document.getElementById(tokenUpgrades[i].name).disabled = true }
+            document.getElementById(tokenUpgrades[i].name).innerHTML = "(" + wholeNumberShort(i) + ") "
+            if (tokenUpgradeAvailable(i)) {
+                document.getElementById(tokenUpgrades[i].name).innerHTML += "Level " + wholeNumberShort(game.tokens.upgrades[i]) + "/" + wholeNumberShort(tokenUpgrades[i].levels()) + ". Effect: " + tokenUpgrades[i].effect + "<br>Cost: " + showTokenCost(i)
+                if (game.tokens.amount >= (tokenUpgrades[i].baseCost * (tokenUpgrades[i].costScaling ** game.tokens.upgrades[i]))) { document.getElementById(tokenUpgrades[i].name).disabled = false }
+                else { document.getElementById(tokenUpgrades[i].name).disabled = true }
+            }
+            else {
+                document.getElementById(tokenUpgrades[i].name).disabled = true
+                document.getElementById(tokenUpgrades[i].name).innerHTML += "Complete upgrades " + tokenUpgradeRequirements(i) + " to unlock"
+            }
         }
     }
     if (currentTab == JSON.stringify([3, 1])) {
@@ -484,7 +514,8 @@ function updateSmall() { //This part checks if buttons are available or not, add
         else { document.getElementById("ticketButton0").disabled = true }
         document.getElementById("ticketButton0").innerHTML = "Tokenstige: Resets tokens and token upgrades to gain tickets<br>Tickets: " + numberShort(game.tickets.amount) + "; Gain: " + numberShort(calculateTicketGain()) + "<br>Minimum needed: " + numberShort(game.tickets.start)
         for (let i = 1; i < ticketUpgrades.length; i++) {
-            document.getElementById(ticketUpgrades[i].name).innerHTML = "Level " + wholeNumberShort(game.tickets.upgrades[i]) + "/" + wholeNumberShort(ticketUpgrades[i].levels()) + ". Effect: " + ticketUpgrades[i].effect + "<br>Cost: " + showTicketCost(i)
+            document.getElementById(ticketUpgrades[i].name).innerHTML = "(" + wholeNumberShort(i) + ") "
+            document.getElementById(ticketUpgrades[i].name).innerHTML += "Level " + wholeNumberShort(game.tickets.upgrades[i]) + "/" + wholeNumberShort(ticketUpgrades[i].levels()) + ". Effect: " + ticketUpgrades[i].effect + "<br>Cost: " + showTicketCost(i)
             if (game.tickets.amount >= (ticketUpgrades[i].baseCost * (ticketUpgrades[i].costScaling ** game.tickets.upgrades[i]))) { document.getElementById(ticketUpgrades[i].name).disabled = false }
             else { document.getElementById(ticketUpgrades[i].name).disabled = true }
         }
@@ -571,8 +602,14 @@ function updateSmall() { //This part checks if buttons are available or not, add
     else {
         document.getElementById("PrestigeTab").classList.remove("flickering")
     }
+    if (game.achievements.canClaim) {
+        document.getElementById("achievementsButton").classList.add("flickering")
+    }
+    else {
+        document.getElementById("achievementsButton").classList.remove("flickering")
+    }
     if (game.prestige.reset == true) {
-        game.xp.levelCap = [1, 100]
+        game.xp.levelCap = [1, 500]
     }
     else {
         game.xp.levelCap = [1, 5]
@@ -584,7 +621,6 @@ function updateSmall() { //This part checks if buttons are available or not, add
     game.xp.level = XPToLevel([Math.max(game.xp.amount[0], 0), game.xp.amount[1]])
     game.xp.pseudoLevel = XPToLevel(addBig(game.xp.amount, game.xp.lostXP))
     let percent = 0
-    if (compareBig(game.xp.level, game.player.highestLevel)) { game.player.highestLevel = game.xp.level } //If your current level is set to something higher than your recorded highest level, your highest level gets set to that level
     if (game.player.unlocks < unlockLevelsSmall.length) { document.getElementById("nextUnlockLevel").innerHTML = "You will unlock something new at level " + wholeNumberShort(unlockLevelsSmall[game.player.unlocks]) } //If player unlocks are still "inside" the small level unlocks, it displays that
     else { document.getElementById("nextUnlockLevel").innerHTML = "All unlocks achieved. Check back later for more content" }
     //else { document.getElementById("nextUnlockLevel").innerHTML = "You will unlock something new at level " + displayBig([1, unlockLevelsBig[game.player.unlocks - unlockLevelsSmall.length]]) } //Else if the player has gotten past that, it displays the level for the big level unlocks
@@ -740,7 +776,7 @@ function numberToTime(x) { //Converts a number from seconds (example: 346) into 
         result = ""
         if (xCeil >= 31536000) {
             if (xCeil / 31536000 >= 10000) { result += wholeNumberShort(xCeil / 31536000) + "y " }
-            else { result += Math.floor(xCeil / 31536000) + "y "}
+            else { result += Math.floor(xCeil / 31536000) + "y " }
         }
         if (Math.floor(xCeil / 86400) % 365 != 0) result += Math.floor((xCeil / 86400) % 365) + "d "
         if (Math.floor(xCeil / 3600) % 24 != 0) result += (Math.floor(xCeil / 3600) % 24) + "h "
@@ -924,6 +960,12 @@ function collectAll() {
     if (currentTab == JSON.stringify([2, 3])) { collectAllXPBoost() }
     if (currentTab == JSON.stringify([2, 4])) { buyAllTokens() }
     if (currentTab == JSON.stringify([3, 1]) && game.prestige.reset == true) { collectAllRP() }
-    if (currentTab == JSON.stringify([3, 2])) {collectAllReplicanti()}
+    if (currentTab == JSON.stringify([3, 2])) { collectAllReplicanti() }
     //call a different function based on tab, like a collect all xp function for xp
+}
+
+function countPets(x, y) { //x = starting pet, y = final pet, both included: countPets(3, 6) = (3, 4, 5, 6)
+    let count = 0
+    for (i = x; i <= y; i++) { if (game.pets.amount[i] >= 1) { count++ } }
+    return count
 }
